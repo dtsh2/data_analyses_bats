@@ -6,6 +6,7 @@ This course material is part of the training material for a two-day course provi
 <br>
 The course material provides an introduction to R and Rstudio (an integrated development environment for R) in an interactive manner and then contains example data-sets to practise data manipulation, graphical exploration and statistical hypothesis testing.
 <br>
+
 ## Prerequisite software installation
 <br>
 To follow this course, must be installed R and Rstudio beforehand.
@@ -14,11 +15,11 @@ To follow this course, must be installed R and Rstudio beforehand.
 <br>
 The course material is organized in parts corresponding to the 2 days of the course. Slides contain both theory and practice session instructions. 
 <br>
-Session 1 - Introduction to R & R Studio, data types and data manipulation in R, and a brief introduction to plotting in base R
-Session 2 - Introduction to tidyverse and plotting in ggplot
-Session 3 - Introduction to importing and exporting your own data with more ggplot exercises
-Session 4 - Introduction to different types of models and when and why they are used
-Session 5 - Introduction to Luminex and other serology data from a 'data analyses' perspective, with an introduction to finding cut off values
-Session 6 - Introduction to regression using serology data
-Session 7 - Developing regression to introduce more covariates and spatio-temporal data
-Session 8 - Introduction to fitting models to data and some other things that might interest infectious disease researchers
+Session 1 - Introduction to R & R Studio, data types and data manipulation in R, and a brief introduction to plotting in base R<br>
+Session 2 - Introduction to tidyverse and plotting in ggplot<br>
+Session 3 - Introduction to importing and exporting your own data with more ggplot exercises<br>
+Session 4 - Introduction to different types of models and when and why they are used<br>
+Session 5 - Introduction to Luminex and other serology data from a 'data analyses' perspective, with an introduction to finding cut off values<br>
+Session 6 - Introduction to regression using serology data<br>
+Session 7 - Developing regression to introduce more covariates and spatio-temporal data<br>
+Session 8 - Introduction to fitting models to data and some other things that might interest infectious disease researchers<br>
