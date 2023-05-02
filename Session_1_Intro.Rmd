@@ -159,9 +159,20 @@ takes you to a server or
 
 In R, a package is a collection of functions, data sets, and other resources that extend the functionality of the base R software. R packages can be downloaded and installed from a variety of sources, including the Comprehensive R Archive Network (CRAN), Bioconductor, GitHub, and other online repositories.
 
-R packages allow users to perform a wide range of specialized tasks in R, from data visualization to statistical analysis to machine learning. Some popular R packages include ggplot2 for creating visualizations, dplyr for data manipulation, tidyr for data cleaning, and caret for machine learning.
+R packages allow users to perform a wide range of specialized tasks in R, from data visualization to statistical analysis to machine learning. Some popular R packages include **ggplot2** for creating visualizations, **dplyr** for data manipulation, **tidyr** for data cleaning, and **caret** for machine learning.
 
-Packages in R are typically installed using the install.packages() function, and loaded into the R session using the library() function. Once a package is loaded, its functions and data sets can be accessed using the package name followed by the function or data set name, separated by a period (e.g., ggplot2::ggplot()).
+Packages in R are typically installed using the **install.packages()** function, and loaded into the R session using the **library()** function. . For example,
+
+```{r}
+# Check if ggplot2 is already installed
+if(!require(ggplot2)){install.packages("ggplot2")}
+
+# Load ggplot2 library
+library(ggplot2)
+```
+Checks to see if the package is installed or not with the **require()** function and installs it if not with the **install.packages()** function, then loads the library for use using the **library()** function. 
+
+Once a package is loaded, its functions and data sets can be accessed using the package name followed by the function or data set name, separated by a period (e.g., ggplot2::ggplot()).
 
 In addition to the packages available on public repositories, users can also create their own R packages to share their code with others or to organize their own workflows. R packages typically include documentation to explain the package's functions and usage, making it easier for others to use and contribute to the package.
 
