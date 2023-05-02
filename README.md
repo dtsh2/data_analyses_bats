@@ -1,18 +1,16 @@
 # data_analyses_bats
-# Heading1
-**Training code for working with serological and other data from infectious disease studies**
+
+## Training code for working with serological and other data from infectious disease studies
 <br>
 This course material is part of the training material for a two-day course provided to researchers from a range of backgrounds who are beginners using R.
 <br>
 The course material provides an introduction to R and Rstudio (an integrated development environment for R) in an interactive manner and then contains example data-sets to practise data manipulation, graphical exploration and statistical hypothesis testing.
 <br>
-# Heading2
-Prerequisite software installation
+## Prerequisite software installation
 <br>
 To follow this course, must be installed R and Rstudio beforehand.
 
-# Heading2
-Course organization
+## Course organization
 <br>
 The course material is organized in parts corresponding to the 2 days of the course. Slides contain both theory and practice session instructions. 
 <br>
