@@ -9,7 +9,7 @@ The course material provides an introduction to R and Rstudio (an integrated dev
 
 ## Prerequisite software installation
 <br>
-To follow this course, you install R and Rstudio beforehand.
+To follow this course, you have to install R and Rstudio beforehand.
 
 ## Course organization
 <br>
