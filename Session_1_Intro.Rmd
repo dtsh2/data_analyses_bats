@@ -66,6 +66,22 @@ mean(c(1, 2, 3))
 ```
 will return 2.
 
+Note that some functions like **mean()** need certain conditions to be true before they can work. Let's take a closer look at this example:
+
+```{r}
+n1 <- c(1,2,3,4,5)
+n2 <- c(1,2,3,4,NA)
+mean(n1)
+mean(n2)
+```
+
+*n2* includes an **NA**, which means Not Available, and so the function mean() cannot calculate the mean. We can easily resolve that here because mean() has a *logical* condition that we will learn more about later, but here it is *na.rm = FALSE*. We include that and get a different answer:
+
+```{r}
+n2 <- c(1,2,3,4,NA)
+mean(n2, na.rm = TRUE)
+```
+
 The **sd()** function is used to calculate the standard deviation of a vector or a set of numbers. For example, 
 
 ```{r}
