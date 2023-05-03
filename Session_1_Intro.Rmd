@@ -306,6 +306,21 @@ A **logical** vector *vector1* is then created with 5 values.
 
 **Logical** operations are then performed using the **&** (AND), **|** (OR), and **!** (NOT) operators on the logical variables. The print() function is used to display the results of the logical operations.
 
+This is also a good place to note two other important R syntax points: R treats capital (or *upper case*) letters differently to *lower case*, so A is not the same a, meaning if you have a vector of characters or factors, Apple and apple with are different. Also, you can also assign things using the = sign instead of the *assignment operator* **<-**. So lets do one exercise to test this:
+
+```{r}
+a <- 1 # assign the number 1 to a
+A <- 2 # assign the number 2 to A
+print(a)
+print(A)
+A==a
+# now use the = as asign
+A=a
+print(a)
+print(A)
+A==a
+```
+
 This can sometimes cause some confusion, so let's try with another **last example** of logical conditions:
 
 ```{r}
