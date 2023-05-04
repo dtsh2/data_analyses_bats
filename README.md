@@ -26,4 +26,10 @@ Session 8 - Introduction to fitting models to data and some other things that mi
 
 ## Resources
 <br>
-You can find several great resources online. Ones students (and I) have found useful include resources such as https://rfun.library.duke.edu/ https://bookdown.org/yih_huynh/Guide-to-R-Book/, https://epirhandbook.com/en/index.html and https://www.r-project.org/help.html
+You can find several great resources online. Ones students (and I) have found useful include resources such as https://rfun.library.duke.edu/ https://bookdown.org/yih_huynh/Guide-to-R-Book/, https://epirhandbook.com/en/index.html and https://www.r-project.org/help.html 
+<br>
+Further links and references are also in the text.
+
+## Additional notes
+<br>
+Note that in these we use a mixture of simulated and real data. Some of the plots and examples are deliberately unlikely to be ones you might makr, but are used for illustrative and learning purposes. 
