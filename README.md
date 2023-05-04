@@ -32,4 +32,4 @@ Further links and references are also in the text.
 
 ## Additional notes
 <br>
-Note that in these we use a mixture of simulated and real data. Some of the plots and examples are deliberately unlikely to be ones you might makr, but are used for illustrative and learning purposes. 
+Note that in this workshop we use a mixture of simulated and real data. Some of the plots and examples are simply for illustrative and learning purposes. 
