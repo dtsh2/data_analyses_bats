@@ -1,0 +1,452 @@
+---
+title: "Modelling workshop"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Session 8 Space and time
+
+**Session 8** contains an introduction to **spatial** and **temporal** data analyses and a brief introduction to **phylogenetic trees** in **R**.
+
+### Session 8a - Introduction to Spatial Data and its Statistical Analysis
+
+Spatial data refers to any data that is associated with a specific location or geographic coordinate system.
+
+Statistical analysis of spatial data involves the application of statistical techniques to understand the spatial patterns, relationships, and distributions of the data. Spatial data analysis can identify hotspots of disease outbreaks, assess the impact of land-use changes on ecosystems, model the spread of invasive species, etc.
+
+One of the key components of spatial data analysis is **spatial autocorrelation**, which measures the degree of similarity or dissimilarity between spatially adjacent observations. It helps identify **clusters** or **spatial patterns** in the data, enabling us to understand the spatial dependence and spatial processes underlying the phenomena being studied.
+
+Spatial statistics offer a range of analytical methods, such as spatial interpolation, spatial regression, point pattern analysis, and spatial clustering.
+
+Let's start using some basic but essential analyses.
+
+This example loads the **spatstat** package which is commonly used.
+
+```{r}
+# Load the spatstat package
+library(spatstat)
+```
+
+There is an inbuilt data set that we will load that is dataset of 50 point locations in the UK. We will load and plot that:
+
+```{r}
+# Load the `chorley` dataset included in the package
+data(chorley)
+
+# Plot the dataset to visualize the point locations
+plot(chorley)
+```
+
+Next, let's computes the **K-function** using the **Kest()** function, a common tool for testing for **clustering** in **spatial point data**. The K-function measures the *expected number of points within a certain distance of each point*, and compares this to the *expected number of points if the points were randomly distributed*. 
+
+We then plot the K-function and test for significant clustering using the **envelope()** function, which creates an envelope around the K-function based on simulations under the null hypothesis of complete spatial randomness. The significance envelope can be used to test whether the observed K-function values are significantly different from the expected values under this randomness.
+
+Note that in this example we will only use **nsim=5** for 5 simulations but this should be *99* or more, but that takes a lot more time.
+
+```{r}
+# Compute the K-function to test for clustering
+kfun <- Kest(chorley)
+
+# Plot the K-function
+plot(kfun)
+
+# Test for significant clustering using the envelope method
+env.kfun <- envelope(chorley, Kest, nsim = 5, rank = FALSE)
+
+# Plot the significance envelope
+plot(env.kfun, main = "Significance Envelope")
+```
+
+The K-function tests for clustering at a certain distance, but we can repeat this process using the **L-function**. The L-function is similar to the K-function but measures the *expected distance to the nearest neighbor for each point*. The L-function can be used to test for clustering at *different distances*. We use the **Lest()** function for this.
+
+```{r}
+# Calculate the L-function to test for clustering at different distances
+lfun <- Lest(chorley)
+
+# Plot the L-function
+plot(lfun)
+
+# Test for significant clustering using the envelope method
+env.lfun <- envelope(chorley,Lest, nsim = 5, rank = FALSE)
+### SHOULD BE 99 BUT TIME!!!
+
+# Plot the significance envelope
+plot(env.lfun, main = "Significance Envelope")
+```
+
+By analyzing the data using the K- and L-functions we are testing whether the points are significantly clustered or randomly distributed at different distances. This information can be used to guide further spatial analysis or to make inferences about the underlying processes that generated the data.
+
+Last for this section, we can plot the point data with different *standard deviations* of an *isotropic smoothing kernel* by altering a parameter *sigma* to show the smoothed spatial intensity from a point pattern. Here's what this looks like for these data:
+
+```{r}
+par(mfrow = c(1, 3))  # set up to plot 3 plots on one row
+# plot density at various levels of sigma
+plot(density(chorley, sigma = 0.5), main = "Sigma 0.5")
+plot(density(chorley, sigma = 0.75), main = "Sigma 0.75")
+plot(density(chorley, sigma = 1), main = "Sigma 1.0")
+
+```
+
+### Session 8b - Temporal data
+
+We have already met time series data in our **SIR** modelling and **fitting** models to data sessions, **Sessions 4 and 7**, but there are many other types of analyses that we can do.
+
+Time series data captured information about how a variable or phenomenon changes and evolves over time. 
+
+Like spatial analyses, analysis of time series data involves examining the patterns, trends, and dependencies within the data to extract meaningful insights and make predictions, including forecasting into the future based on historical patterns.
+
+One of the fundamental characteristics of time series data is its **temporal dependency**, where the value of a given observation is often influenced by its previous values. This dependency can be utilized to identify trends, seasonal patterns, and other temporal relationships within the data.
+
+Statistical analysis of time series data encompasses a wide range of techniques and models, including descriptive statistics, decomposition, autocorrelation, and forecasting methods that we will introduce here. 
+
+##### Example 1
+
+This example first loads the *AirPassengers* dataset that comes with R which contains monthly passenger numbers on an airline from 1949 to 1960. We load the data and then convert the dataset into a time series object using the **ts()** function and plot the time series.
+
+```{r}
+# Load the AirPassengers dataset
+data(AirPassengers)
+
+# Convert the dataset into a time series object
+ts_air <- ts(AirPassengers, start = c(1949, 1), frequency = 12)
+
+# Plot the time series
+plot(ts_air, main = "Monthly Airline Passenger Numbers 1949-1960")
+```
+
+Next, we can used the **decompose()** function to break this data set down (i.e. *decomposes*) into **trend**, **seasonal**, and **random** components and plot these. 
+
+```{r}
+# Decompose the time series into trend, seasonal, and random components
+decomp_ts_air <- decompose(ts_air)
+
+# Plot the decomposed components
+plot(decomp_ts_air)
+```
+
+We can also conduct a seasonal decomposition of the time series using the **stl()** function and plot the resulting decomposition.
+
+```{r}
+# Conduct a seasonal decomposition of the time series
+stl_ts_air <- stl(ts_air, s.window = "periodic")
+
+# Plot the seasonal decomposition
+plot(stl_ts_air)
+```
+
+Last for this data set, we can fits an AutoRegressive Integrated Moving Average (ARIMA) model to the time series using the **arima()** function with **order (2, 1, 2)** and generate a forecast for the next 24 months using the **forecast()** function.
+
+```{r}
+# Fit an ARIMA model to the time series
+arima_ts_air <- arima(ts_air, order = c(2, 1, 2))
+
+# Install and load the forecast package
+#install.packages("forecast")
+library(forecast)
+
+# Generate a forecast for the time series
+forecast_ts_air <- forecast(arima_ts_air, h = 24)
+```
+
+Let's plot the forecast:
+
+```{r}
+# Plot the forecast
+plot(forecast_ts_air, main = "Forecasts from ARIMA")
+
+```
+
+That does not look convincing, especially as time goes on, suggesting this is not an appropriate model for these data.
+
+##### Example 2
+
+Now let's look as some disease data. These were taken from a very useful resource, https://epirhandbook.com/en/index.html
+
+The time series data and some of this code came directly from their time series analysis section here: https://epirhandbook.com/en/time-series-and-outbreak-detection.html
+
+We can install the entire package by following this code using the **pacman** library:
+
+```{r}
+# install the latest version of the Epi R Handbook package
+library(pacman)
+pacman::p_install_gh("appliedepi/epirhandbook")
+```
+
+Then we can load the package for use:
+
+```{r}
+# load the package for use
+pacman::p_load(epirhandbook)
+```
+
+This is the way that this group loads their packages using the **p_load** function in the **pacman** package.
+
+```{r}
+pacman::p_load(rio,          # File import
+               here,         # File locator
+               tidyverse,    # data management + ggplot2 graphics
+               tsibble,      # handle time series datasets
+               slider,       # for calculating moving averages
+               imputeTS,     # for filling in missing values
+               feasts,       # for time series decomposition and autocorrelation
+               forecast,     # fit sin and cosin terms to data (note: must load after feasts)
+               trending,     # fit and assess models 
+               tmaptools,    # for getting geocoordinates (lon/lat) based on place names
+               ecmwfr,       # for interacting with copernicus sateliate CDS API
+               stars,        # for reading in .nc (climate data) files
+               units,        # for defining units of measurement (climate data)
+               yardstick,    # for looking at model accuracy
+               surveillance  # for aberration detection
+               )
+```
+
+Now let's import the data. Note that this data is available from the *epirhandbook* website, but it is already included in the data files for this workshop. These data are counts of campylobacteriosis cases from Germany.
+
+```{r}
+counts <- rio::import("data/campylobacter_germany.xlsx")
+```
+
+Next we reformat the date column and organise the dates into weeks:
+
+```{r}
+## ensure the date column is in the appropriate format
+counts$date <- as.Date(counts$date)
+
+## create a calendar week variable 
+## fitting ISO definitons of weeks starting on a monday
+counts <- counts %>% 
+     mutate(epiweek = yearweek(date, week_start = 1))
+```
+
+Then we can plot the data:
+
+```{r}
+## plot a line graph of cases by week
+ggplot(counts, aes(x = epiweek, y = case)) + 
+     geom_line()
+```
+
+In the epirhandbook training they checked for duplicates using this code:
+
+```{r}
+## get a vector of TRUE/FALSE whether rows are duplicates
+are_duplicated(counts, index = epiweek) 
+
+```
+
+Note that they then show how you can **interpolate** missing data into data sets using this code to do linear interpolation between data:
+
+```{r}
+## create a variable with missing data instead of weeks with reporting issues
+counts <- counts %>% 
+     mutate(case_miss = if_else(
+          ## if epiweek contains 52, 53, 1 or 2
+          str_detect(epiweek, "W51|W52|W53|W01|W02"), 
+          ## then set to missing 
+          NA_real_, 
+          ## otherwise keep the value in case
+          case
+     ))
+
+## alternatively interpolate missing data by linear trend 
+## between two nearest adjacent points
+counts <- counts %>% 
+  mutate(case_int = imputeTS::na_interpolation(case_miss)
+         )
+```
+
+Let's plot those:
+
+```{r}
+## to check what values have been imputed compared to the original
+ggplot_na_imputations(counts$case_miss, counts$case_int) + 
+  ## make a traditional plot (with black axes and white background)
+  theme_classic()
+```
+
+Next we can use a moving average to do a similar job:
+
+```{r}
+## create a moving average variable (deals with missing data)
+counts <- counts %>% 
+     ## create the ma_4w variable 
+     ## slide over each row of the case variable
+     mutate(ma_4wk = slider::slide_dbl(case, 
+                               ## for each row calculate the name
+                               ~ mean(.x, na.rm = TRUE),
+                               ## use the four previous weeks
+                               .before = 4))
+```
+
+Here is what the difference between those approaches looks like when we plot the moving average on top of the cases:
+
+```{r}
+## make a quick visualisation of the difference 
+ggplot(counts, aes(x = epiweek)) + 
+     geom_line(aes(y = case)) + 
+     geom_line(aes(y = ma_4wk), colour = "red")
+```
+Next, let's do a **decomposition** on those cases using another STL function similar to the above and plot it directly using the **autoplot()** function:
+
+```{r}
+counts %>% 
+  as_tsibble(., index = date) %>%
+  model(STL(case_int, robust = TRUE)) %>%
+  components() %>%
+  autoplot()
+```
+
+**Autocorrelation** is the correlation between two observations at different points in a time series. For example, samples taken close together in time might have a strong *positive* or *negative* **correlation**. When these correlations are present, they indicate that past values influence the current value. **Autocorrelation** and **partial autocorrelation** functions allow us to see this and understand the properties of time series data, fit the appropriate models, and make forecasts.
+
+We talk about these correlations using the term **lags**, which in time-series data by are the characteristic, **evenly spaced intervals**, such as *days*, *months*, or *years*. The number of intervals between the two observations is the lag. 
+
+Let's look at **autocorrelation** using the **ACF()** function:
+
+```{r}
+## using the counts dataset
+counts %>% as_tsibble(., index = date) %>%
+  ## calculate autocorrelation using a full years worth of lags
+  ACF(case_int, lag_max = 365) %>% 
+  ## show a plot
+  autoplot()
+```
+
+We can see that the data are strongly autocorrelated. But what about the **partial autocorrelation** analysis. Let's do that using the **PACF()** function: 
+
+```{r}
+## using the counts data set 
+counts %>% as_tsibble(., index = date) %>% 
+  ## calculate the partial autocorrelation using a full years worth of lags
+  PACF(case_int, lag_max = 365) %>% 
+  ## show a plot
+  autoplot()
+```
+The **PACF** results look very different. This is because partial autocorrelation is the relationship between an observation in a time series with observations at prior time steps with the relationships of intervening observations removed. 
+
+We can see that these data are **not independent**, and we can test for that using the Ljung–Box test statistic (sometimes called the *'portmanteau'* test) for examining the null hypothesis of independence in a given time series.
+
+```{r}
+## test for independence 
+Box.test(counts$case_int, type = "Ljung-Box")
+```
+
+### Session 8c - Introduction to Plotting Phylogenetic Trees in R
+
+Phylogenetics trees *can* but do not all include information on time.
+
+**Phylogenetic analysis** studies the evolutionary relationships between organisms. It involves constructing phylogenetic trees or evolutionary trees that illustrate the evolutionary history and relatedness of different species, populations, or genes.
+
+The primary goal of phylogenetic analysis is to understand how species have evolved and diverged from common ancestors over time. In any analysis the assumption is that all the organisms' sequence data share a common ancestor and have diversified through evolution. 
+
+Various methods and algorithms have been developed for phylogenetic analysis, including **distance-based methods**, which is new, **maximum likelihood** methods, and **Bayesian inference**, which we have already met. These methods utilize statistical models and computational techniques to compare and evaluate the evolutionary relationships among organisms and estimate the most likely phylogenetic tree.
+
+Phylogenetic analyses involve several key steps:
+* sample collection
+* nucleotide (RNA or DNA) extraction
+* nucleotide sequencing
+* sequence assembly
+* sequence alignment
+* evolutionary and phylogenetic modelling
+
+There are many ways of doing the above. Here we will assume these are all done and sequence alignments have been performed by any number of tools (e.g. from here https://www.ebi.ac.uk/Tools/msa/) and that the phylogenetic analyses have been performed (e.g. using BEAST here https://beast.community/).
+
+Here we will import a **newick** file that has a tree in that has already been downloaded from  https://4va.github.io/biodatasci/data.html
+
+We will be using examples from https://yulab-smu.top/treedata-book/ 
+
+```{r}
+library(tidyverse)
+library(ggtree)
+require(treeio)
+
+tree <- read.tree("data/tree_newick.nwk")
+tree
+```
+
+Next we plot the tree:
+
+```{r}
+ggplot(tree) + geom_tree() + theme_tree()
+```
+
+Or with a scale:
+
+```{r}
+ggtree(tree) + geom_treescale()
+```
+
+Or we plot it like this:
+
+```{r}
+# or add the entire scale to the x axis with theme_tree2()
+ggtree(tree) + theme_tree2()
+```
+
+We can disable the scaling and produce a **cladogram** instead using **branch.length="none"** inside the **ggtree()** function call.
+
+```{r}
+ggtree(tree, branch.length="none")
+```
+
+Next we can plot the tree and highlight clades of interest:
+
+```{r}
+ggtree(tree) + 
+  geom_tiplab() + 
+  geom_cladelabel(node=17, label="clade A", 
+                  color="red2", offset=.8, align=TRUE) + 
+  geom_cladelabel(node=21, label="clade B", 
+                  color="blue", offset=.8, align=TRUE) + 
+  theme_tree2() + 
+  xlim(0, 70) + 
+  theme_tree()
+```
+
+Or highlight clades by choosing a node:
+
+```{r}
+ggtree(tree) +
+  geom_tiplab() + 
+  geom_hilight(node=17, fill="gold") + 
+  geom_hilight(node=21, fill="purple")
+```
+
+Or we can link taxa:
+
+```{r}
+ggtree(tree) + 
+  geom_tiplab() + 
+  geom_taxalink("E", "H", color="blue3") +
+  geom_taxalink("C", "G", color="orange2", curvature=-.9)
+
+```
+
+Next we can import and plot some infection related data. Here we will use the data from *Liang et al. “Expansion of genotypic diversity and establishment of 2009 H1N1 pandemic-origin internal genes in pigs in China.” Journal of virology (2014): 88(18):10864-74.*
+
+This data set has been analysed in BEAST and so has time related data.
+
+```{r}
+# Import the data.
+tree <- read.beast("data/flu_tree_beast.tree")
+```
+
+Next we plot it by providing the most recent sampling date so we get the dates and can add a scale bar like this:
+
+```{r}
+ggtree(tree, mrsd="2013-01-01") + 
+  theme_tree2() 
+```
+
+And finally we can add tip labels and adjust the axis
+
+```{r}
+ggtree(tree, mrsd="2013-01-01") + 
+  theme_tree2() + 
+  geom_tiplab(size=2, align = F)
+
+```
+
+### The END
