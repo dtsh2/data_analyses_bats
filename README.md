@@ -10,6 +10,8 @@ The course material provides an introduction to R and Rstudio (an integrated dev
 ## Prerequisite software installation
 <br>
 To follow this course, you have to install R and Rstudio beforehand.
+<br>
+There is also a short script called Session 0 that can be run to make sure all the packages are installed prior to running the workshop, though how to install packages is also part of the course. This is provided only so that packages can be installed before the course in case there are internet issues that might delay the course.
 
 ## Course organization
 <br>
@@ -32,4 +34,4 @@ Further links and references are also in the text.
 
 ## Additional notes
 <br>
-Note that in this workshop we use a mixture of simulated and real data. Some of the plots and examples are simply for illustrative and learning purposes. 
+Note that in this workshop we use a mixture of simulated and real data. Some of the plots and examples are simply for illustrative and learning purposes. Further, this course can be seen as a "starter pack" just to get people going. There are experts in and course on each area of the material that is taught that are better than this for those topic areas.
