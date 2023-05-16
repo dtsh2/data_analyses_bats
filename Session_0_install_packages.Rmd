@@ -1,0 +1,44 @@
+---
+title: "R workshop"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Session 0
+
+**Session 0** contains a short script to ensure that all the packages we need are installed before we start the workshop and, if not, install them on your device. 
+
+This will make more sense as we go through the workshop but will be run before it in preparation for the days in case there are issues with internet.
+
+```{r}
+# List of required packages
+required_packages <- c("ggplot2","epiR","clubSandwich")
+
+# Function to check if a package is installed
+is_package_installed <- function(package_name) {
+  is.element(package_name, installed.packages()[, "Package"])
+}
+
+# List to store missing packages
+missing_packages <- vector("character")
+
+# Check if each required package is installed
+for (package in required_packages) {
+  if (!is_package_installed(package)) {
+    missing_packages <- c(missing_packages, package)
+  }
+}
+
+# Install missing packages
+if (length(missing_packages) > 0) {
+  message("Installing missing packages: ", paste(missing_packages, collapse = ", "))
+  install.packages(missing_packages)
+} else {
+  message("All required packages are already installed.")
+}
+
+```
+
