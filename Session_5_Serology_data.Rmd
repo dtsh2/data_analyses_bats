@@ -1,0 +1,537 @@
+---
+title: "Modelling workshop"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Session 5
+
+**Session 5** contains an introduction to Luminex and other serology data from a 'data analyses' perspective and how we can use models to estimate things such as *seropositive* versus *seronegative* results by finding cut offs and using ROC curves.
+
+### Session 5a - antibody titres as data
+
+The first thing to remember is that the antibodies were measure are populations of immunoglobulins. That means that they have properties similar to other things that we count and measure. 
+
+The second thing to remember is that antibody populations are dynamics and changing through time.
+
+Let's now import our recently created and saved data set, **example_data.csv** and begin:
+
+```{r}
+library(tidyverse)
+example_data <- read.csv("data/example_data.csv")
+glimpse(example_data)
+```
+
+Remember that R has again imported the data and made the text as *character* data types when we want some as *dates* and some as *factors*. Let's change those:
+
+```{r}
+example_data <- example_data %>%
+  mutate_at(vars("Cohort", "Sex", "Result.Beckman", "Result.Roche"), as.factor)
+example_data <- example_data %>%
+  mutate_at(vars("Date.of.birth","Date.of.symptoms","Date.of.PCR.test","Date.of.blood.sample"), ~ as.Date(., format = "%Y-%m-%d"))
+
+glimpse(example_data)
+```
+
+Note we had to change the **as.Date()** format to *"%Y-%m-%d"*
+
+Now let's think about the *antibody titres* data; let's choose *IgG_S* as an example data set.
+
+```{r}
+print(example_data$IgG_S)
+```
+
+This is continuous numeric data, so let's do some basic statistics on these:
+
+```{r}
+summary(example_data$IgG_S)
+```
+This tells us that the *minimum* (Min.) is 1.099, *first quartile* (1st Qu.) 11.595, *median* (Median) 27.031, *mean* (Mean) 34.551, *third quartile* (3rd Qu.) 47.903 and *maximum* (Max.) 156.733.
+
+We can summarize that using another function, **boxplot.stats()**:
+
+```{r}
+boxplot.stats(example_data$IgG_S, do.conf = FALSE)
+```
+Which also tells us the sample size (n=51) and that there are some **outliers** ($out). These may or may not be important. 
+
+Now lets plot that in several ways. In the *base* plot it looks like this:
+
+```{r}
+hist(example_data$IgG_S)
+```
+
+We have seen this before, but let's look at the data more. 
+
+```{r}
+hist(example_data$IgG_S, freq = FALSE)
+lines(density(example_data$IgG_S))
+```
+
+In the *tidyverse* plot the histogram looks like:
+
+```{r}
+ggplot(example_data, aes(x=IgG_S)) + 
+  geom_histogram()
+```
+
+Not that these data are **skewed data**. 
+
+Skewed refers to a type of **data distribution** where the values are not evenly distributed around the *mean*. 
+
+In a *normal distribution*, the values are distributed *symmetrically* around the mean, with an equal number of observations above and below the mean. However, in a skewed distribution, the data is pulled towards one tail, resulting in a longer tail on one side of the distribution than the other.
+
+There are two types of skewness: **positive skewness** and **negative skewness**. Positive skewness occurs when the tail of the distribution is longer on the *right-hand side* of the distribution, like the *IgG_S* data, while negative skewness occurs when the tail of the distribution is longer on the left-hand side of the distribution. Skewed data can occur for various reasons, such as outliers, data transformation, or natural variation in the data.
+
+It's important to be aware of skewness in data because it can affect statistical analyses and modeling. For example, if the data is positively skewed, the mean may not be a representative measure of *central tendency*, and using **parametric tests** that *assume normality* may not be appropriate. In such cases, **non-parametric** methods may be more suitable for analysis.
+
+**Note that for us the highest results might be interesting - these might be the serologically positive results!**
+
+How can we work out what is and is not positive?
+
+Let's plot some of the other *anti-spike antibody* data. We will use a different technique to what we did previously and just trying overlaying the different data:
+
+```{r}
+#plot two histograms in same graph
+hist(example_data$IgG_S, 
+     col=rgb(0,0,1,0.2),
+     breaks = 20,
+     ylim = c(0,35),
+     xlab='Values', ylab='Frequency', main='Histogram of antibody titres')
+hist(example_data$IgA_S, 
+     #breaks = 50,
+     col=rgb(1,0,0,0.2),
+     add=TRUE)
+
+#add legend
+legend('topright', c('IgG_S', 'IgA_S'),
+       fill=c(rgb(0,0,1,0.2), rgb(1,0,0,0.2)))
+```
+
+We can see the *IgA_S* has more low values and the *IgG_S* has higher values. This is not unexpected, given what we know about antibody titres and the immune system.
+
+#### Determining differences; cut offs, ROC, and test characteristics
+
+However, let's *imagine* that these are *antibodies against different viruses*, so imagine that these are both *IgG* but against different viruses. How can we know if these are different?
+
+Let's make these into the *long format* data again:
+
+```{r}
+library(tidyr)
+# Select columns to keep and gather
+cols_to_keep <- c("Patient")
+cols_to_gather <- c("IgG_S", "IgA_S")
+# Gather columns and create new data set
+long_data <- example_data %>%
+  gather(key = "Antibody", value = "Titre", one_of(cols_to_gather)) %>%
+  select(cols_to_keep, Antibody, Titre) %>%
+  mutate(Antibody = factor(Antibody)) # Note without this, Antibody would be a character
+
+glimpse(long_data)
+
+```
+
+Not let's plot them in ggplot:
+
+```{r}
+library(ggplot2)
+ggplot(long_data, aes(x=Titre, fill=Antibody)) + geom_histogram(alpha=0.6, position="identity")
+```
+They look different; let's plot these as box plots and overlay the data:
+
+```{r}
+ggplot(long_data, aes(x=Antibody, y=Titre, fill=Antibody)) +
+  geom_boxplot() + geom_jitter(width = 0.1)
+```
+
+Or even fancier, using a **violin** plot:
+
+```{r}
+library(ggplot2)
+library(see)
+ggplot(long_data, aes(x = Antibody, y = Titre, fill = Antibody)) +
+  geom_violindot(fill_dots = "black") +
+  theme_modern() +
+  scale_fill_material_d()
+```
+
+We can test if there is statistical support for these coming from different distributions using a test called the **Kolmogorov-Smirnov Test**. This test is a *non-parametric* test and does not assume the data are from a *normal* distribution: 
+
+```{r}
+ks.test(example_data$IgA_S, example_data$IgG_S)
+```
+
+And we can plot this in another way:
+
+```{r}
+plot(ecdf(example_data$IgA_S), main = "", xlim=c(0,130))
+plot(ecdf(example_data$IgG_S), add = TRUE, lty = "dashed")
+```
+
+The **ks.test()** function performs a two-sample Kolmogorov-Smirnov test to compare the distributions of the data sets and the **p-value** is a measure of the evidence against the null hypothesis that the two datasets are drawn from the same distribution. 
+
+Here the p-value is very low, so there is good support that they are different. If the p-value is greater than **the significance level** (usually 0.05), we fail to reject the null hypothesis and conclude that there is not enough evidence to suggest that the datasets are from different distributions.
+
+We can simulate some data from the same distributions to show what that would look like:
+
+```{r}
+# Set seed for reproducibility
+set.seed(123)
+
+# Simulate first Poisson dataset
+lambda <- 30
+n <- 100
+data1 <- rpois(n, lambda)
+
+# Simulate second Poisson dataset
+data2 <- rpois(n, lambda)
+
+# Test if datasets are from the same distribution using ks.test
+ks.test(data1, data2)
+```
+
+And then let's plot those the same way:
+
+```{r}
+plot(ecdf(data1), main = "", xlim=c(10,55))
+plot(ecdf(data2), add = TRUE, lty = "dashed")
+```
+
+Now let's assume that these are from the same sample but the *IgA_S* with the lower titres are **naive** animals that have never has an infection (so susceptible in the modelling), and the *IgG_S* are the **immune** or if not immune **recovered** animals (recovered) that are truly **seropositive**, but we want to find the difference. 
+
+You can see that some of the *"negative"* animals have titres that are higher than the *"positive"* animals. This is not uncommon. Many things determine this, such as previous infections or waning antibody titres. These lead to **false positive** and **false negative** results.
+
+##### Test sensitivity and specificity and predictive values
+
+**Sensitivity** and **specificity** are two measures used to evaluate the performance of any test that has this *binary* classification model, which we often want. 
+
+**Sensitivity** is the proportion of **true positive cases** that are correctly identified by the model. It measures how well the model can identify the individuals who actually have the condition, out of all individuals who have the condition. A model with high sensitivity correctly identifies most of the true positive cases and has a low false negative rate.
+
+**Specificity** is the proportion of true negative cases that are correctly identified
+
+We can quickly look at this using some simple maths and then a piece of code. 
+
+|         | Disease   | No Disease |
+|---------|-----------|------------|
+| Positive| 75        | 10         |
+| Negative| 25        | 90         |
+
+*Sensitivity* = $\frac{TP}{TP + FN}$ = $\frac{75}{75 + 25}$ = 0.75
+
+*Specificity* = $\frac{TN}{TN + FP}$ = $\frac{90}{90 + 10}$ = 0.9
+
+The next example is lifted directly from the **epiR** package. It generates a data set listing test results (called *tes*) and true disease status (called *dis*):
+
+```{r}
+library(epiR)
+library(tidyverse)
+dis <- c(rep(1, times = 744), rep(0, times = 842))
+tes <- c(rep(1, times = 670), rep(0, times = 74),
+rep(1, times = 202), rep(0, times = 640))
+dat.df02 <- data.frame(dis, tes)
+tmp.df02 <- dat.df02 %>%
+mutate(dis = factor(dis, levels = c(1,0), labels = c("Dis+","Dis-"))) %>%
+mutate(tes = factor(tes, levels = c(1,0), labels = c("Test+","Test-"))) %>%
+group_by(tes, dis) %>%
+summarise(n = n())
+tmp.df02
+## View the data in conventional 2 by 2 table format:
+pivot_wider(tmp.df02, id_cols = c(tes), names_from = dis, values_from = n)
+rval.tes02 <- epi.tests(tmp.df02, method = "exact", digits = 2,
+conf.level = 0.95)
+summary(rval.tes02)
+```
+
+This provides a huge amount of information on the tests. 
+
+The **apparent prevalence (ap)** is what the test results show.
+But the **true prevalence (tp)** accounts for the test specificity and sensitivity, where:
+
+$$True\, Prevalence = \frac{Apparent\, Prevalence + (Specificity − 1)}
+{Specificity + (Sensitivity − 1)}$$
+
+and where **se** in the results in the **diagnostic test sensitivity** and **sp** the **diagnostic test specificity**
+
+There are several other metrics, but the only two others we will cover here are the **positive predictive value** (**pv.pos**) and **negative predictive value** (**pv.neg**) which are the ratios of cases truly diagnosed as positive to all those who had positive test results and negative to those who had positive test results.
+
+Importantly, **positive predictive value** and **negative predictive value** are sensitive to the prevalence of infection. Run the above code again with altered values and you will see.
+
+These sensitivity and specificity calculations **assume** that we know what the true result is. For example, in the **example_data** which test antibody results are the truth?
+
+##### ROC curves
+
+Receiver operating characteristic (ROC) curves illustrate the trade-off between the true positive and the false positive rates at various classification thresholds. This is described below.
+
+For learning purposes, let's begin using an inbuilt data set in the **pROC** package and ROCs:
+
+```{r}
+library(pROC)
+rocobj <- plot.roc(aSAH$outcome, 
+                   aSAH$s100b,
+                   main = "Confidence intervals", 
+                   percent=TRUE,
+                   ci = TRUE,                  # compute AUC (of AUC by default)
+                   print.auc = TRUE,
+                   print.thres="best")           # print the AUC (will contain the CI)
+ciobj <- ci.se(rocobj,                         # CI of sensitivity
+               specificities = seq(0, 100, 5)) # over a select set of specificities
+plot(ciobj, type = "shape", col = "#1c61b6AA")     # plot as a blue shape
+plot(ci(rocobj, of = "thresholds", thresholds = "best")) # add one threshold
+```
+
+Here we use the *aSAH\$outcome* data which is binary *Good* and *Poor* as the result and the *aSAH\$s100b* as the quantitative data.
+
+The plotted ROC has a lot of information, so let's look at the **Area under the curve** or **AUC** metric. 
+
+AUC is commonly used in statistics to evaluate the performance of a binary classification model. It measures the ability of a model to distinguish between positive and negative samples across different thresholds.
+
+In the context of AUC here, the curve refers to the ROC curve. The ROC curve is created by plotting the true positive rate (sensitivity) against the false positive rate (1-specificity) at various threshold settings. Each point on the curve represents a different threshold, and the curve itself represents the trade-off between sensitivity and specificity.
+
+The AUC is calculated by computing the integral of the ROC curve. It ranges from 0 to 1, where an AUC of 0.5 indicates a model with no discrimination ability (random guessing), and an AUC of 1 represents a perfect classifier that can perfectly separate positive and negative samples.
+
+Interpreting the AUC value is straightforward. The higher the AUC, the better the model's ability to classify positive and negative samples accurately. An AUC of 0.5 indicates a model that performs no better than chance, while values above 0.5 indicate better-than-chance performance. An AUC of 1 suggests a model with flawless discrimination.
+
+We can simply read the values, but to simplify this, let's get the best **threshold**, specificity and sensitivity:
+
+```{r}
+coords(rocobj,'best')
+```
+
+Now let's use the *example_data* serology data **assuming** that the *Result.Beckman* is the truth and the *IgG_S* is the quantitative serology data we have:
+
+```{r}
+rocobj2 <- plot.roc(example_data$Result.Beckman, 
+                   example_data$IgG_S,
+                   main = "Confidence intervals", 
+                   percent=TRUE,
+                   ci = TRUE,                  # compute AUC (of AUC by default)
+                   print.auc = TRUE,
+                   print.thres="best")           # print the AUC (will contain the CI)
+ciobj <- ci.se(rocobj2,                         # CI of sensitivity
+               specificities = seq(0, 100, 5)) # over a select set of specificities
+plot(ciobj, type = "shape", col = "#1c61b6AA")     # plot as a blue shape
+plot(ci(rocobj2, of = "thresholds", thresholds = "best")) # add one threshold
+
+```
+
+Notice two things:
+* first, that this has a higher AUC so if this were a real test and we were comparing it to the previous analysis, this would be *better*.
+* second, note that there are **two** *threshold* possibilities! Let's see those:
+
+```{r}
+coords(rocobj2,'best')
+```
+
+Here, the AUC is good, given our assumptions, but we can choose different **thresholds**, either 10.3 or 6.8 (rounded).
+
+* 10.3 captures all the true positives (i.e. it is very sensitive, with 100% sensitivity), but it has more false positives, shown by it's lower specificity (75%).
+* 6.8 has fewer true positive (87.5% sensitivity), but also fewer false positives (specificity 87.5%)
+
+Which threshold you used would depend on your **aims** - do you want to make sure you do not miss a positive? In which case, you would use the 10.3, but have to recognise that there may be more false negatives in the results.
+
+Let's take a look at what those different results would look like:
+
+```{r}
+library(ggplot2)
+library(ggpubr)
+select_Ig <- c("IgG_S")
+
+# Set cut off value
+cut_off1 <- 10.3
+cut_off2 <- 6.8
+
+# Create histogram with coloured counts
+p1<- ggplot(long_data[long_data$Antibody %in% select_Ig, ], 
+            aes(x = Titre, fill = Titre > cut_off1)) + 
+  geom_histogram(binwidth = 1) + 
+  scale_fill_manual(values = c("#00BFFF", "#FFA07A")) +
+  labs(title = "Histogram of IgG S titres by cut off = 10.3",
+       x = "Titre",
+       y = "Count")
+
+p2<- ggplot(long_data[long_data$Antibody %in% select_Ig, ], 
+            aes(x = Titre, fill = Titre > cut_off2)) + 
+  geom_histogram(binwidth = 1) + 
+  scale_fill_manual(values = c("#00BFFF", "#FFA07A")) +
+  labs(title = "Histogram of IgG S titres by cut off = 6.8",
+       x = "Titre",
+       y = "Count")
+
+ggarrange(p1,p2, ncol = 1)
+```
+
+Notice the **scale_fill_manual()** function sets the colors for the fill of the histogram bars, with blue representing values less than or equal to the cut off value and orange representing values greater than the cut off value. 
+The **labs()** function sets the *title*, *x-axis* label, and *y-axis* label for the plot.
+
+##### Mixed models
+
+Last in this session, we will see what happens if we do not know what the **truth** is, by using models to find cut offs. We can do that using a **mixed model**.
+
+A mixed model can be used to find the cut offs between two **bimodal distribution peaks**. 
+
+In this case, the mixed model would involve fitting two *Gaussian distributions* or *normal* distributions to the data, with each distribution corresponding to one of the bimodal peaks. The means and standard deviations of each distribution would be modeled as fixed effects, while the within-subject variability would be modeled as a random effect.
+
+The mixed model would also include a binary variable indicating which of the two distributions each observation belongs to. The cut off point between the two distributions would be estimated as the point where the probability of belonging to each distribution is equal.
+
+The mixed model would be fit using **maximum likelihood** estimation, and model selection methods such as **Akaike's Information Criterion** (AIC) or **Bayesian** methods and **Bayesian Information Criterion** (BIC) could be used to determine the best model. We will cover these better in **Session 7**
+
+Once the model is fit, the cut off point between the two bimodal peaks can be estimated, along with confidence intervals or credible intervals. This information can then be used to identify the groups or subgroups within the data that correspond to each of the bimodal peaks, and to further explore the differences between these groups or subgroups.
+
+Here is some R code that simulates a *bimodal distribution* and fits a mixture model to estimate the cut-off point where we use two **normal** distributions and a *maximum likelihood* approach:
+
+```{r}
+# Simulate data from a bimodal distribution
+set.seed(123)
+n <- 1000
+x <- c(rnorm(n/2, mean = 2, sd = 1), rnorm(n/2, mean = 6, sd = 1))
+pop <- c(rep(1,n/2),rep(2,n/2))
+# Fit mixture model to data
+library(mixtools)
+model <- normalmixEM(x)
+
+# Find optimal cutoff between peaks
+cutoff <- (model$mu[1] + model$mu[2]) / 2
+
+# Calculate sensitivity and specificity for different cutoff values
+sensitivity <- numeric(length(x))
+specificity <- numeric(length(x))
+
+for (i in 1:length(x)) {
+  predicted <- x > x[i]
+  true_positives <- sum(predicted & (x >= cutoff))
+  false_negatives <- sum(!predicted & (x >= cutoff))
+  true_negatives <- sum(!predicted & (x < cutoff))
+  false_positives <- sum(predicted & (x < cutoff))
+  sensitivity[i] <- true_positives / (true_positives + false_negatives)
+  specificity[i] <- true_negatives / (true_negatives + false_positives)
+}
+
+# Find cutoff value with highest sum of sensitivity and specificity
+best_cutoff <- x[which.max(sensitivity + specificity)]
+best_cutoff
+
+# plot x with the cut off
+
+xx<-data.frame(x=x,pop=as.factor(pop))
+library(ggplot2)
+p <- ggplot(xx, aes(x = x, fill = pop)) + geom_histogram()+
+  geom_vline(xintercept = best_cutoff, col = 'black')
+p
+```
+
+You can see that some red and some blue points are either side of the cut off in black, showing the false positives and negatives if this was the chosen cut off.
+
+Now let's re-run the code with different cut offs:
+
+```{r}
+# Simulate data from a bimodal distribution
+set.seed(123)
+n <- 1000
+x1 <- c(rnorm(n/2, mean = 2, sd = 1), rnorm(n/2, mean = 4, sd = 1))
+pop <- c(rep(1,n/2),rep(2,n/2))
+
+# Fit mixture model to data
+library(mixtools)
+model <- normalmixEM(x1)
+
+# Find optimal cutoff between peaks
+cutoff <- (model$mu[1] + model$mu[2]) / 2
+
+# Calculate sensitivity and specificity for different cutoff values
+sensitivity <- numeric(length(x1))
+specificity <- numeric(length(x1))
+
+for (i in 1:length(x1)) {
+  predicted <- x1 > x1[i]
+  true_positives <- sum(predicted & (x1 >= cutoff))
+  false_negatives <- sum(!predicted & (x1 >= cutoff))
+  true_negatives <- sum(!predicted & (x1 < cutoff))
+  false_positives <- sum(predicted & (x1 < cutoff))
+  sensitivity[i] <- true_positives / (true_positives + false_negatives)
+  specificity[i] <- true_negatives / (true_negatives + false_positives)
+}
+
+# Find cutoff value with highest sum of sensitivity and specificity
+best_cutoff <- x1[which.max(sensitivity + specificity)]
+best_cutoff
+
+# plot x with the cut off
+
+xx1<-data.frame(x=x1,pop=as.factor(pop))
+library(ggplot2)
+p1 <- ggplot(xx1, aes(x = x, fill = pop)) + geom_histogram()+
+  geom_vline(xintercept = best_cutoff, col = 'black')
+```
+
+```{r}
+# Simulate data from a bimodal distribution
+set.seed(123)
+n <- 1000
+x2 <- c(rnorm(n/2, mean = 2, sd = 1), rnorm(n/2, mean = 6, sd = 3))
+pop <- c(rep(1,n/2),rep(2,n/2))
+
+model <- normalmixEM(x2)
+
+# Find optimal cutoff between peaks
+cutoff <- (model$mu[1] + model$mu[2]) / 2
+
+# Calculate sensitivity and specificity for different cutoff values
+sensitivity <- numeric(length(x2))
+specificity <- numeric(length(x2))
+
+for (i in 1:length(x2)) {
+  predicted <- x2 > x2[i]
+  true_positives <- sum(predicted & (x2 >= cutoff))
+  false_negatives <- sum(!predicted & (x2 >= cutoff))
+  true_negatives <- sum(!predicted & (x2 < cutoff))
+  false_positives <- sum(predicted & (x2 < cutoff))
+  sensitivity[i] <- true_positives / (true_positives + false_negatives)
+  specificity[i] <- true_negatives / (true_negatives + false_positives)
+}
+
+# Find cutoff value with highest sum of sensitivity and specificity
+best_cutoff <- x2[which.max(sensitivity + specificity)]
+best_cutoff
+
+# plot x with the cut off
+
+
+xx2<-data.frame(x=x2,pop=as.factor(pop))
+library(ggplot2)
+p2 <- ggplot(xx2, aes(x = x, fill = pop)) + geom_histogram()+
+  geom_vline(xintercept = best_cutoff, col = 'black')
+
+```
+
+```{r}
+library(ggpubr)
+ggarrange(p,p1,p2, ncol = 1)
+
+```
+
+Here we can see that there are different numbers of each either side of the threshold line in black, depending on the distributions and cut offs used.
+
+Note of course that there will be *no negative titres* for tests such as on the Luminex platform, but these modelling approaches generally will work well and there are different models that can be fit to data.
+
+Last we can use these types of data to determine what is and what is not over and above a threshold. For example, with our original example data let's make a new column saying whether the *IgG_S* titre is over 10.3, which we used in an example above.
+
+```{r}
+library(tidyverse)
+
+# add the threshold, e.g.
+example_data$threshold <- 10.3
+
+
+# use mutate to create new column based on threshold
+example_data <- example_data %>%
+  mutate(over_threshold = ifelse(IgG_S > threshold, "over", "not over"))
+
+# view updated data frame
+glimpse(example_data)
+
+```
+
+Take a look at the last lines of the printed data.
