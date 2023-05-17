@@ -34,6 +34,10 @@ Once installed, you should now be able to open RStudio and see a screen like thi
 
 Spend a bit of time familiarizing yourselves with this screen and we will talk through this later.
 
+##### Downloading and installing JAGS
+
+Later in Session 7 we will use another piece of software, JAGS. You can download and install that from here: https://sourceforge.net/projects/mcmc-jags/files/
+
 ### Beginning to code
 
 We will start by opening RStudio and begin with some of the most basic things about R. 
