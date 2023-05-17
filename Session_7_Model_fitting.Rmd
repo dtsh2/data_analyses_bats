@@ -343,7 +343,7 @@ Note that some researchers have made Bayesian analyses very accessible, such as 
 
 ##### Example of Bayesian analysis using R and JAGS
 
-Here we will introduce Bayesian analyses through using another piece of software and R package, **JAGS** (Just Another Gibbs Sampler).
+Here we will introduce Bayesian analyses through using another piece of software and R package, **JAGS** (Just Another Gibbs Sampler). If you have not, you need do download and install JAGS from here: https://sourceforge.net/projects/mcmc-jags/files/
 
 First we load the libraries and code the model.
 
