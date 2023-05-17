@@ -359,6 +359,12 @@ We will be using examples from https://yulab-smu.top/treedata-book/
 
 ```{r}
 library(tidyverse)
+library(devtools)
+# devtools::install_github("YuLab-SMU/treeio")
+library(tidyverse)
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("ggtree")
 library(ggtree)
 require(treeio)
 
