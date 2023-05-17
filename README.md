@@ -9,7 +9,7 @@ The course material provides an introduction to R and Rstudio (an integrated dev
 
 ## Prerequisite software installation
 <br>
-To follow this course, you have to install R and Rstudio beforehand.
+To follow this course, you have to install R, Rstudio and JAGS beforehand.
 <br>
 There is also a short script called Session 0 that can be run to make sure all the packages are installed prior to running the workshop, though how to install packages is also part of the course. This is provided only so that packages can be installed before the course in case there are internet issues that might delay the course.
 
