@@ -23,7 +23,7 @@ glimpse(diamonds)
 view(diamonds)
 ```
 
-Note what different information they give you. 
+Note what information the different ways of showing the data give you. 
 
 We can use other approaches to look at the data. For example, if we want to look at all the *Premium* *cut* diamonds that cost over 13,000 dollars, we can filter for those using the following code:
 
@@ -75,7 +75,7 @@ mtcars %>%
             avg_hp = mean(hp))
 ```
 
-Note the output will show the average *mpg*, *cyl*, and *hp* as separate columns named *avg_mpg*, *avg_cyl*, and *avg_hp*, respectively.
+Note the output will show the average *mpg*, *cyl*, and *hp* as separate columns named *avg_mpg*, *avg_cyl*, and *avg_hp*, respectively. The *avg_cyl* mean is 4 because we selected only those rows in which *cyl* was 4 using the **filter()** function.
 
 ### Session 2b - Plotting in ggplot
 
@@ -100,7 +100,7 @@ mydata <- tibble(Bat, Date, Titer)
 
 We simulated the data using the **rpois()** function, which simulates data using a **Poisson distribution**, which is a **discrete probability distribution** that expresses the probability of a given number of events, which for this we are saying is an antibody titre. However, titres can be **continuous** data, but we will use integers for now.
 
-Note that without using the **set.seed()** function, we will all have different plots because **rpois()** and the replated functions usings a random number generator. You can take a look by typing **?Distributions** in the console.
+Note that without using the **set.seed()** function, we will all have different plots because **rpois()** and the related functions usings a random number generator. You can take a look by typing **?Distributions** in the console.
 
 Let’s plot the titres by the individual bats, first by *Bat* as the x-axis:
 
@@ -144,7 +144,7 @@ mydata %>%                            # name of the dataset
   geom_point()                        # add data points on graph
 ```
 
-Now let's increase the simulated data. This can be done simply, such as by replicating it using the **replicate()** function any number of times. Here we will replicate the above data three times using this code:
+Now let's increase the simulated data set size. This can be done simply, such as by replicating it using the **replicate()** function any number of times. Here we will replicate the above data three times using this code:
 
 ```{r}
 library(dplyr)
@@ -166,7 +166,7 @@ ggplot(mydata, aes(x = Date, y = Titer, colour = Bat)) +
     geom_point(size = 2)+geom_jitter()
 ```
 
-The points are now visible because *geom_jitter()* adds some **noise** (random variation) to the points. The *amount of jitter* can be controlled by using the **height** and **width** arguments. For example, using smaller values \<1 makes the points *tighter*, like this:
+The points are now visible because *geom_jitter()* adds some **noise** (random variation) to the points. The *amount of jitter* can be controlled by using the **height** and **width** arguments. For example, using smaller values \<1 makes the points *tighter* by adding smaller random values, like this:
 
 ```{r}
 ggplot(mydata, aes(x = Date, y = Titer, colour = Bat)) + 
