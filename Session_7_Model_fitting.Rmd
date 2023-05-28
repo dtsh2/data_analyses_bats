@@ -9,11 +9,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Session 7 Model fitting
 
-**Session 7** contains an introduction to fitting models to data.
+**Session 7** contains an introduction to fitting models to data using **Maximum Likelihood** and **Bayesian** approaches.
+
+### 7a - Introduction to model fitting
 
 Models of all sorts can and are fit to data, including the statistical and mathematical models we have been introduced to here, but also **phylogenetic** methods used to analyse gene or genomic sequence data.
 
-Some mechanistic mathematical models are run without fitting the models to data, but often an informative way to understand a system is to fit models to the data, potentially in an iterative way, where models are developed, data collected based on the model parameters, the model fit to the data, which generates news questions, etc. in an iterative fashion until the system is well understood.
+Some mechanistic mathematical models are run without fitting the models to data, as we have seen, but often an informative way to understand a system is to fit models to the data, potentially in an iterative way, where models are developed, data collected based on the model parameters, the model fit to the data, which generates news questions, etc. in an iterative fashion until the system is well understood.
 
 Earlier we were introduced to linear regression in **Session 4** and more again in **Session 6**. However, what was perhaps not clear is that every time we ran a model it was actually being **fit** to data. We started to explore that at the end of **Session 6**.
 
@@ -21,7 +23,7 @@ This means that we took the model with the factors that we hypothesized were pre
 
 We will not go into all of these here due to time, but will bring these concepts in below when needed.
 
-But these assumptions were made (knowingly or not) and then the model was fit to estimate the parameters such as the intercept $beta_0$ where $x$ is 0 and the slope of the line, $beta_1$ that shows the relationship between $x$ and $y$ in the below:
+But these assumptions were made (knowingly or not) and then the model was fit to estimate the parameters such as the intercept $\beta_0$ where $x$ is 0 and the slope of the line, $\beta_1$ that shows the relationship between $x$ and $y$ in the below:
 
 $$
 y = \beta_0 + \beta_1 x + \epsilon
@@ -42,13 +44,15 @@ However, interestingly (or not!) really maximum likelihood is a special case of 
 
 For example, for the linear model fitting, if the errors belong to a normal distribution the least squares estimators are also the maximum likelihood estimators. The **nls()** function (which stands for 'Nonlinear Least Squares') can be used to find parameter values for relatively simple *non-linear* functions.
 
-### Maximum Likelihood Estimation in R
+### 7b - Maximum Likelihood approaches
 
 Here, we will use the **bbmle** package. However, there are several packages and methods for estimating model parameters using maximum likelihood.
 
+**Likelihood** is a fundamental component of statistical inference. The likelihood function, often denoted as **L(θ|X)**, describes the *probability of observing the data X given a specific set of parameters θ*. It quantifies the plausibility of different parameter values, given the observed data.
+
 The **bbmle** package allows us to fit a lot of models that do not assume a *normal* likelihood, so Poisson, binomial, multinomial, beta, gamma, and other distributions. 
 
-**bbmle** is also able to fit data to **dynamic models** where the value of the **state variables** like the **susceptible, infected and recovered** in **SIR models**, changes through time. When this happens, the distributions are not likely to be normal.
+**bbmle** is also able to fit data to **dynamic models** where the value of the **state variables** like the **susceptible, infected and recovered** in **SIR models**, change through time. When this happens, the distributions are not likely to be normal.
 
 #### Example 1
 
@@ -111,10 +115,12 @@ legend(3,12,c("generating","estimated"), lty=c("solid",
 "dashed"), bty="n")  
 ```
 
-Here's how we can break that down. First, the likelihood estimation can be considered to be four parts:
+Here's how we can break that down. 
+
+First, the likelihood estimation can be considered to be four parts:
 * a function describing a model
 * a function that calculates the negative log-likelihood
-* a call to a  function that does the non-linear search for the best parameter values, and
+* a call to a function that does the non-linear search for the best parameter values, and
 * analysis of the results.
 
 ##### The model 
@@ -144,7 +150,7 @@ y = yhat(a=a,b=b)
 data=rpois(length(y),y)  
 ```
 
-The function **yhat()** represents the deterministic part of the model and **rpois()** adds stochasticity (noise, or randomness).
+The function **yhat()** represents the deterministic part of the model and **rpois()** adds stochasticity (noise, or randomness) using a Poisson distribution.
 
 ##### The negative log-likelihood  
 The next step is to use the model function and the data to create function that returns the  summed negative log-likelihood.  This is the part of the code that does that:  
@@ -228,7 +234,9 @@ We need a *likelihood* function that takes the same arguments as the first model
 
 Note that there are some differences here as we use a logit-transformation **qlogis()** to ensure that $β$ and $ν$ are probabilities. 
 
-We pass the optimization function logit-transformed values which the function then back-transforms using **plogis()**. Similarly, for the population size and number of initial infections, we pass log-transformed values which the function back-transforms. See if you can find these terms in this code.
+We pass the optimization function logit-transformed values which the function then back-transforms using **plogis()**. Similarly, for the population size and number of initial infections, we pass log-transformed values which the function back-transforms.
+
+See if you can find these terms in this code.
 
 Note that this can take a long time. If you make *trace=2* within the *control* argument above it will provide feedback at the command line about the progress of the optimization. 
 
@@ -295,7 +303,7 @@ theta2 <- as.numeric(c(plogis(coef(fit.pois)[1:2]),
                   exp(coef(fit.pois)[3:4])) )
 ```
 
-Note that this does not do at estimating standard errors - you can see the **NaN** which means that they have not been estimated.
+Note that this does not estimate the standard errors - you can see the **NaN** which means that they have not been estimated.
 
 The estimate for $β$ is similar to that from the normal likelihood model above, but $ν$ is different. The $ν$ removal rate parameter estimate for the Poisson likelihood is seven times lower than that for the normal likelihood.
 
@@ -316,19 +324,17 @@ legend("topleft", c("Poisson", "Gaussian"), lwd=2, col=c("black",grey(0.85)))
 
 The fit of the normal, measurement-error model to fit the data better than the Poisson measurement-error model.
 
-### Bayesian Estimation in R
+### 7c - Bayesian approaches
 
 **Bayesian analyses** are a powerful statistical framework that provide a systematic and flexible approach to inferential reasoning and analyses.
 
 Fundamentally, Bayesian analysis combines prior knowledge or beliefs about a phenomenon (including parameter estimates) with observed data to update and refine our understanding. This is achieved through **Bayes' theorem**.
 
-Bayes' theorem quantifies the **posterior probability** of an event given **prior knowledge** and **observed data**. The prior represents our initial beliefs, while the **likelihood** function describes how the data inform us about the underlying parameters of interest.
+Bayes' theorem quantifies the **posterior probability** of an event given **prior knowledge** and **observed data**. The prior represents our initial beliefs, while the **likelihood** function describes how the data inform us about the underlying parameters of interest. We met the likelihood above.
 
 There are other benefits of Bayesian analyses that allow for complex and hierarchical structures which can mean it is extremely useful. Bayesian approaches can be employed to estimate parameters, make predictions, and quantify uncertainty in a wide range of models.
 
 However, Bayesian analyses also pose computational challenges due to the need to estimate **high-dimensional integrals**. **Markov Chain Monte Carlo** (**MCMC**) methods and more recent advances in Bayesian computation have significantly improved the feasibility and scalability of Bayesian analyses, making it available to more people.
-
-Not that Bayesian analyses are closely linked to the concept of **likelihood**, a fundamental component of statistical inference. The likelihood function, often denoted as **L(θ|X)**, describes the *probability of observing the data X given a specific set of parameters θ*. It quantifies the plausibility of different parameter values, given the observed data.
 
 Bayes theorem can be expressed mathematically as:
 
@@ -398,9 +404,9 @@ plot(density(jags1[[1]]))
 
 ```
 
-The *hairy caterpillar* looking plot and *normal* distribution is a good indication that there has been good mixing and convergence of the model.
+The *hairy caterpillar* looking plot and *normal* distribution is a good indication that there has been good mixing and convergence of the model. If you get a *snake* looking plot and a *non-normal* dsitribution, this is an indication that there is something wrong. A first usual first step is to run your chains longer, but if that does not fix it, it that it will require more careful thought.
 
-Let's look at these in other ways using different functions. We can save the results as a new data set:
+Let's look at the results we have in other ways using different functions. We can save the results as a new data set:
 
 ```{r}
 samps<-coda.samples(jags, variable.names=c("mu", "tau"), n.iter=1000)
@@ -434,7 +440,7 @@ mcmc_hist(samps, pars = c("mu", "tau"))
 
 ```
 
-Now you can see that these hostograms show the same results for the parameter estimates from the summaries of the data using the **summary()** function above.
+Now you can see that these histograms show the same results for the parameter estimates from the summaries of the data using the **summary()** function above.
 
 To view separate histograms of each of the four Markov chains we can use the **mcmc_hist_by_chain()** function, which plots each chain in a separate facet in the plot.
 
@@ -472,4 +478,4 @@ mcmc_pairs(samps, pars = c("mu", "tau"),
 
 Note that instead of confidence intervals, the variation around Bayesian estimates for parameters like the mean are typically called **credible intervals**. 
 
-They ar called **credible intervals** because they can be interpreted as probabilistic statement about the parameter given the current knowledge and data. In contrast, **confidence intervals** capture the uncertainty about the interval we have obtained (i.e., whether it contains the true value or not), so they cannot be interpreted as a probabilistic statement about the true parameter values.
+They are called **credible intervals** because they can be interpreted as probabilistic statement about the parameter given the current knowledge and data. In contrast, **confidence intervals** from *likelihood* approaches capture the uncertainty about the interval we have obtained (i.e., whether it contains the true value or not), so they cannot be interpreted as a probabilistic statement about the true parameter values.
