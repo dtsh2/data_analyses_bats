@@ -446,9 +446,9 @@ ggplot(example_data, aes(x = IgG_M, y = Sex)) +
   geom_density_ridges(scale = 0.6)
 ```
 
-And last for this session, let's plot the different antibodies types (*IgG*, *IgM*, *IgA*) against the spike protein (*S*) through time. 
+And last for this session, let's plot the different antibodies types (*IgG*, *IgM*, *IgA*) against the spike protein (*S*) through time. For this, we have to do some data manipulation.
 
-First, for *ggplot* we should convert the **wide format** data to **long format** data before plotting it, because to plot these data in ggplot, we need to **reshape** the data so that each row contains a single observation of the variable at a given time point. To do this, we can use the **gather()** function from the **tidyr** package:
+First, for *ggplot* we must convert the **wide format** data to **long format** data before plotting it, because to plot these data in ggplot, we need to **reshape** the data so that each row contains a single observation of the variable at a given time point. To do this, we can use the **gather()** function from the **tidyr** package:
 
 ```{r}
 library(tidyr)
@@ -484,7 +484,7 @@ ggplot(long_data, aes(x=Time.from.symptoms.to.blood.sample, group=Antibody, fill
  ylab("Counts")
 ```
 
-But what we might be interested in is how titres vary with time, so let's plot that:
+But what we might be interested in is seeing how titres vary with time, so let's plot that:
 
 ```{r}
 long_data %>%
@@ -521,6 +521,7 @@ long_data %>%
   scale_y_continuous(limit=c(0,NA),oob=squish)+
   xlab("Time from symptoms to sample")
 ```
+There are other ways of plotting these data through time, but this helps us understand what **geom_smooth()** goes. But see if the data in the above plot makes biological sense to you.
 
 ### Exporting data
 
