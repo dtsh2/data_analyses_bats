@@ -12,11 +12,11 @@ knitr::opts_chunk$set(echo = TRUE)
 **Session 1** contains an introduction to **R** and **RStudio**, **data types** and **basic data manipulation** in R, with a brief introduction to **plotting** in base R.
 
 ### Session 1a - Introduction to R and RStudio
-R is widely used by statisticians, data analysts, and researchers for data analyses and visualization.
 
 #### R
 
-**R** is a programming language used for statistical computing and graphics. It was first developed by Ross Ihaka and Robert Gentleman at the University of Auckland, New Zealand in 1993, which I mention as I live in New Zealand.
+**R** is a programming language used for statistical computing and graphics. R is widely used by statisticians, data analysts, and researchers for data analyses and visualization.
+It was first developed by Ross Ihaka and Robert Gentleman at the University of Auckland, New Zealand in 1993, which I mention as I live in New Zealand.
 
 R is free to use and, if you know what you are doing, you can contribute to it. There are currently nearly 20,000 **packages** that people have written to do specific tasks. You can see how many there are here: https://cran.r-project.org/web/packages/
 
@@ -67,6 +67,14 @@ and then use:
 ```{r}
 print("Hello, world!") 
 ```
+
+Now type $#$ and write anything you like after this:
+
+```{r}
+# test script
+```
+
+The $#$ sign and it is typically used for two purposes; 1) making notes and 2) commenting out lines of code in scripts. You will see this used throughout this workshop.
 
 Now press
 
@@ -130,12 +138,14 @@ mean(n1)
 mean(n2)
 ```
 
-*n2* includes an **NA**, which means* *Not Available*, and so the function mean() cannot calculate the mean when a number in does not exist. We can easily resolve that here because mean() has a *logical* condition that we will learn more about later, but here it is **na.rm = FALSE**. We include that and get a different answer:
+The vector we made called *n2* includes an **NA**, which means *Not Available*, and so the function **mean()** cannot calculate the mean when a number in does not exist. We can easily resolve that here because mean() has a **logical** condition that we will learn more about later, but here it is **na.rm = FALSE**. We include that and get a different answer:
 
 ```{r}
 n2 <- c(1,2,3,4,NA)
 mean(n2, na.rm = TRUE)
 ```
+
+This is the mean of the four numbers.
 
 The **sd()** function is used to calculate the standard deviation of a vector or a set of numbers. For example, 
 
@@ -157,8 +167,11 @@ The **seq()** function is used to create a sequence of numbers. For example,
 ```{r}
 seq(1, 5, by = 1)
 ```
-will create a vector containing the numbers 1, 2, 3, 4, and 5. 
+will create a vector containing the numbers 1, 2, 3, 4, and 5. Try:
 
+```{r}
+seq(1, 100, by = 10)
+```
 And the **rep()** function is used to repeat a value or a set of values a specified number of times. For example, 
 
 ```{r}
@@ -175,7 +188,7 @@ plot(c(1, 2, 3, 4), c(4, 5, 6, 7))
 
 will create a scatter plot of the points (1, 4), (2, 5), (3, 6) and (4, 7) with the first position the **x axis** values and the second position the **y axis** values.
 
-Now, R comes with some built in data sets as well as functions. We can use another function, **summary()** to see what is in one data set called *cars*:
+R comes with some built in data sets as well as functions. We can use another function, **summary()** to see what is in one data set called *cars*:
 
 ```{r cars}
 summary(cars)
@@ -183,11 +196,11 @@ summary(cars)
 
 And we can use this *base* **plot()** function again to plot some of the data, for example:
 
-```{r pressure, echo=FALSE}
+```{r pressure}
 plot(pressure)
 ```
 
-This plot looks slightly better than our first attempt with the six numbers above, but we can make this look better. Here's an example of how:
+This plot looks slightly better than our first attempt with the six numbers above, but we can make this plot look better. Here's an example of how:
 
 ```{r}
 plot(c(1, 2, 3, 4), c(4, 5, 6, 7), col = "blue", lwd = 5,
@@ -212,7 +225,7 @@ Do not worry about the **ggplot()** text for now, we will have a session on this
 
 ### Getting help in R
 
-**Google** is your friend! I use Google *a lot* for coding. However, there are some great resources, some of which are included in the *README* file on the Github page for this, but not least https://www.r-project.org/help.html
+**Google** is your friend! I use Google *a lot* for coding. However, there are some great resources, some of which are included in the *README* file on the Github page for this, but not least R comes with its own help page https://www.r-project.org/help.html
 
 Basic help can be found in several ways within R though. This includes typing the function name in the **search** box in the **help** tab in **RStudio** or using the R help functions **help()** or simply *?*. For example,
 
@@ -220,7 +233,7 @@ Basic help can be found in several ways within R though. This includes typing th
 # help(lm)
 ```
 
-takes you to a server or
+takes you to a server or try:
 
 ```{r}
 #?lm
@@ -232,7 +245,7 @@ Several people in my lab have begun to use ChatGPT to get them started too.
 
 In R, a **package** is a collection of functions, data sets, and other resources that extend the functionality of the base R software. R packages can be downloaded and installed from a variety of sources, including the Comprehensive R Archive Network (CRAN), Bioconductor, GitHub, and other online repositories.
 
-R packages allow users to perform a wide range of specialized tasks in R, from data visualization to statistical analysis to machine learning. Some popular R packages include **ggplot2** for creating visualizations, **dplyr** and **tidyr** for data cleaning and manipulation, and **caret** for machine learning.
+R packages allow users to perform a wide range of specialized tasks in R, from data visualization to statistical analysis and machine learning. Some popular R packages include **ggplot2** for creating visualizations, **dplyr** and **tidyr** for data cleaning and manipulation, and **caret** for machine learning.
 
 Packages in R are typically installed using the **install.packages()** function, and loaded into the R session using the **library()** function. For example,
 
@@ -244,7 +257,7 @@ if(!require(ggplot2)){install.packages("ggplot2")}
 library(ggplot2)
 ```
 
-Checks to see if the package is installed or not with the **require()** function and installs it if not with the **install.packages()** function, then loads the library for use using the **library()** function. 
+is some code that checks to see if the package is installed or not with the **require()** function and installs it if not with the **install.packages()** function, then loads the library for use using the **library()** function. 
 
 You can also click on:
 
@@ -264,7 +277,7 @@ ggplot2::ggplot()
 
 Brings up and empty plot. I tend not to use packages like this, but you might see it.
 
-In addition to the packages available on public repositories, users can also create their own R packages to share their code with others or to organize their own workflows. R packages typically include documentation to explain the package's functions and usage, making it easier for others to use and contribute to the package.
+In addition to the packages available on public repositories, users can also create their own R packages to share their code with others or to organize their own workflows. R packages typically include documentation to explain the package's functions and usage, making it easier for others to use and contribute to the package. However, sometimes these may not contain a lof of explanation, especially if you are not a coder like me.
 
 ### Session 1b - Data types and data manipulation in R
 
@@ -297,11 +310,11 @@ data <- sample(1:10, 5, replace = TRUE)
 print(data)
 ```
 
-In this script, **sample()** is used to randomly select 5 *integers* from the range of 1 to 10 with replacement. The **set.seed()** and **print()** functions are used to ensure reproducibility of the results and display the results as before. 
+In this script, **sample()** is used to randomly select 5 *integers* from the range of 1 to 10 with replacement (i.e. you can sample the same number more than once). The **set.seed()** and **print()** functions are used to ensure reproducibility of the results and display the results as before. 
 
 You can modify the parameters of **sample()** to generate different types of data sets with different ranges and sizes.
 
-**Character** data types in R represent *strings* of *text* and are used to store categorical or textual data. For example,
+**Character** data types in R represent *strings* of **text** and are used to store categorical or textual data. For example,
 
 ```{r}
 # Simulate data
@@ -382,11 +395,11 @@ This is also a good place to note two other important R syntax points.
 
 ##### Upper case, lower case, ...
 
-R treats capital (or *upper case*) letters differently to *lower case*, so **A is not the same a**. This means that if you have a vector of characters or factors with *Apple* and *apple*, these are different. Similarly if you import a dataset that has a *space* before or after a word, it is different. So, ' Cow' is not the same as 'Cow' is not the same as ' cow' or 'cow' to R. 
+R treats capital (or *upper case*) letters differently to *lower case*, so **A** is **not** the same as **a**. This means that if you have a vector of characters or factors with *Apple* and *apple*, these are different. Similarly if you import a dataset that has a *space* before or after a word, it is different. So, ' Cow' is not the same as 'Cow' is not the same as ' cow' or 'cow' to R. This encourages you to enter and keep clean data.
 
 ##### Assignment operators
 
-Also, you can also assign things using the **=** sign instead of the *assignment operator* **<-**. So lets do one exercise to test this:
+Also, you can also assign things using the **=** sign instead of the *assignment operator* **<-**. I tend not to do this because $==$ means something else and can be mistaken for $=$. So lets do one exercise to test this:
 
 ```{r}
 a <- 1 # assign the number 1 to a
@@ -401,7 +414,7 @@ print(A)
 A==a
 ```
 
-This can sometimes cause some confusion, so let's try with another *last example* of logical conditions:
+This can sometimes cause some confusion, so let's try with another example of logical conditions:
 
 ```{r}
 # Define variables
@@ -450,7 +463,7 @@ df <- data.frame(var1, var2)
 print(df)
 ```
 
-In this script, a **factor** variable *var1* is defined with 6 values representing different levels: "A", "B", and "C". A **numeric** variable *var2* is also defined with 6 values.
+In this script, a **factor** variable *var1* is defined with 9 values representing 3 different **levels**: "A", "B", and "C". A **numeric** variable *var2* is also defined with 6 values.
 
 The two variables are then combined into a **data frame** called *df* using the **data.frame()** function. We will discuss data frames below. Note we can plot this data set using:
 
@@ -485,7 +498,7 @@ The **head()** function is used to display the first 10 rows of the resulting da
 
 Note that **lubridate** is a nice way to deal with times and dates in the **tidyverse** syntax that we will come to. You can find this here for later: https://lubridate.tidyverse.org/
 
-We can plot time and date data too. Here's an example of some code, simulating data from a different time period just to show you another data series and here we will plot it with **ggplot()**:
+We can plot time and date data too. Here's an example of some code, simulating data from a different time period for practice and to show you another data series and here we will plot it with **ggplot()**:
 
 ```{r}
 # Generate some time data
@@ -500,9 +513,9 @@ ggplot(data, aes(x = time, y = value)) +
   scale_x_datetime(date_labels = "%H:%M")
 ```
 
-This script first generates some time data using the **seq()** function to create a sequence of 15-minute intervals between January 1st and January 2nd, 2022. The **rnorm()** function is then used to generate some random values for each time point. The data is then stored in a *data frame* called *data*.
+This script first generates some time data using the **seq()** function to create a sequence of 15-minute intervals between January 1st and January 2nd, 2022. The **rnorm()** function is then used to generate some random values for each time point using **length(time)**. The data is then stored in a *data frame* called *data*.
 
-The script then loads the **ggplot2** **library** and creates a plot of the data using **ggplot()**. We will cover **ggplot()** more later, but let's start introducing the terms; the **aes()** function is used to specify that the x-axis should be the *time* variable and the y-axis should be the *value* variable. The **geom_line()** function is used to draw a line connecting the data points. Finally, the **scale_x_datetime()** function is used to format the x-axis labels as hours and minutes.
+The script then loads the **ggplot2** **library** and creates a plot of the data using **ggplot()**. We will cover **ggplot()** more later, but let's introduce the terms; the **aes()** function is used to specify that the x-axis should be the *time* variable and the y-axis should be the *value* variable. The **geom_line()** function is used to draw a line connecting the data points. Finally, the **scale_x_datetime()** function is used to format the x-axis labels as hours and minutes.
 
 #### Lists
 
@@ -575,7 +588,7 @@ In this script, a **matrix** is created using the **matrix()** function. The mat
 
 The script demonstrates how to access elements of the matrix using indexing. The element in the first row and first column can be accessed using **my_matrix[1, 1]**, and the element in the second row and third column can be accessed using **my_matrix[2, 3]**.
 
-The script also creates an **array** using the **array()** function. The array contains the values 1 through 27, arranged in a 3x3x3 cube. The dim argument specifies the dimensions of the array as a vector. The array is then printed to the console using the print function.
+The script also creates an **array** using the **array()** function. The array contains the values 1 through 27, arranged in a 3x3x3 cube. The **dim** argument specifies the dimensions of the array as a vector. The array is then printed to the console using the **print()** function.
 
 The script demonstrates how to access elements of the array using indexing like for the matrix. The element in the first row, second column, and third "layer" can be accessed using **my_array[1, 2, 3]**, and the element in the third row, first column, and second "layer" can be accessed using **my_array[3, 1, 2]**.
 
