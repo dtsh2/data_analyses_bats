@@ -15,11 +15,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Models can be powerful tools. Models are conceptual frameworks or representations that allow us to understand or make predictions about aspects of the world in which we live. 
 
-Models act as simplified versions of reality, enabling us to navigate and interact with the world more effectively. They come in various forms, ranging from physical replicas to experimental systems to mathematical equations and computer simulations. By focusing on key variables and relationships, models enable us to analyze and begin to understand systems that might otherwise overwhelm us with their complexity.
+Models act as simplified versions of reality. They come in various forms, ranging from physical replicas to experimental systems to mathematical equations and computer simulations. By focusing on key variables and relationships, models enable us to analyze and begin to understand systems that are otherwise too complex.
 
 One of the key strengths of models lies in their ability to make predictions. By understanding the relationships and interactions between different variables within a model, we can make educated guesses about the behavior of the corresponding real-world system. These predictions provide us with valuable insights and help us anticipate future outcomes or consequences.
 
-Models also empower us to explore "what if" scenarios and conduct experiments in a controlled and cost-effective manner. By manipulating different parameters or assumptions within a model, we can examine how changes in one aspect affect the overall system. This allows us to test hypotheses, evaluate alternative strategies, and inform decision-making processes.
+Models also allow us to explore "what if" scenarios and conduct experiments in a controlled and cost-effective manner. By manipulating different parameters or assumptions within a model, we can examine how changes in one aspect affect the overall system. This allows us to test hypotheses, evaluate alternative strategies, and inform decision-making processes.
 
 However, it is important to recognize that models are simplifications and approximations of reality. While they offer valuable insights, they are not infallible. Models involve assumptions and limitations, and their accuracy depends on the quality of the data and the appropriateness of the underlying assumptions. It is essential to critically evaluate and validate models, acknowledging their strengths and weaknesses.
 
@@ -27,7 +27,7 @@ Despite their limitations, models have revolutionized our understanding of the w
 
 In summary, models serve as invaluable tools in simplifying and understanding the world. By distilling complex phenomena into manageable representations, they enable us to predict, explore, and gain insights that would otherwise remain hidden. 
 
-### Statistical models
+### 4b - - Introduction to Statistical models
 
 Statistical models are powerful tools that allow us to understand and analyze data. They are mathematical representations of real-world phenomena, which help us to make predictions and draw conclusions based on data. 
 
@@ -41,11 +41,11 @@ The **response variable** which is the variable that we are interested in predic
 
 The **predictor variables** are the variables that we use to predict or explain the response variable. They are also known as **independent variables**.
 
-The **parameters** are the unknown quantities that we estimate from the data to describe the *relationships between the response variable and the predictor variables*.
+The **parameters** are the unknown quantities that we estimate from the data to describe the *relationships* between the *response variable* and the *predictor variables*.
 
 The **error term** is the part of the response variable that cannot be explained by the predictor variables. It is also known as the **residual** or **noise**.
 
-Let's import our newly created and saved data set, **example_data.csv** and begin:
+Let's import our newly created and saved serology data set, **example_data.csv** and begin:
 
 ```{r}
 library(tidyverse)
@@ -116,7 +116,7 @@ $$
 y = \beta_0 + \beta_1 x + \epsilon
 $$
 
-where **$y$** is the **response variable**, **$x$** is the **predictor variable**, **$\beta_0$** is the **intercept**, **$\beta_1$** is the slope, and **$\epsilon$** is the error term.
+where **$y$** is the **response variable**, **$x$** is the **predictor variable**, **$\beta_0$** is the **intercept**, **$\beta_1$** is the *slope*, and **$\epsilon$** is the *error* term.
 
 We will use some R code to plot this with some values. We will create a *data frame* called *df*, a model called *m*, a plot called *p* and an equation called *eq*:
 
@@ -150,11 +150,14 @@ p + geom_text(aes(label = eq), data = dftext, parse = TRUE)
 In this code, we first load the **ggplot2** package. We then create example data for a simple *linear model* with a *true intercept* of 3 and a *true slope* of 2 using the **rnorm()** function to *add some random noise*. We then **fit** a linear model to the data using the **lm()** function.
 
 Next, we create a ggplot of the data with the linear regression line using the **ggplot()** function and the **geom_point()** and **geom_smooth()** functions. 
-The **method = "lm"** argument is used to fit a linear model to the data and *add the regression line*. We have a **confidence interval** in *grey* around the line, but could remove that using the *se = FALSE* argument. The **ggtitle()**, **xlab()**, and **ylab()** functions are used to add a title and axis labels to the plot.
+
+The **method = "lm"** argument is used to fit a linear model to the data and *add the regression line*. We have a **confidence interval** in *grey* around the line, but could remove that using the *se = FALSE* argument. 
+
+The **ggtitle()**, **xlab()**, and **ylab()** functions are used to add a title and axis labels to the plot.
 
 Finally, we use some additional code to annotate the plot and add labels to the plot for the intercept and slope values. We will not go into that for now. The resulting plot will have the intercept and slope values added to the equation.
 
-Note the **R<sup>2** is the R-squared, a statistical measure commonly used to assess the goodness of fit of a linear regression model. 
+Note the **R<sup>2** is the R-squared, a statistical measure commonly used to assess the *goodness of fit* of a linear regression model. 
 
 Specifically, **R<sup>2** quantifies the proportion of the total variation in the dependent variable (the outcome being predicted) that is accounted for by the linear regression model. It ranges from 0 to 1, where 0 indicates that the model explains none of the variance in the dependent variable, and 1 indicates that the model explains all of the variance.
 
@@ -192,13 +195,13 @@ ggplotRegression <- function(fit){
 ggplotRegression(lm(IgG_S ~ Age, data = example_data))
 ```
 
-The results of this would suggest that in our data set age does not significantly affect the IgG anti-spike antibody titre, but remember there are a lot going on here and we need to consider other factors.
+The results of this would suggest that in our example data set age does not significantly affect the IgG anti-spike antibody titre, but remember there is a lot going on here and we need to consider other biological factors.
 
 These models can be developed to attempt to understand lots of different processes and include factors such as **space** and **time** but we will come back to these later.
 
-### Mechanistic, mathematical models
+###  4c - Introduction to mechanistic, mathematical models
 
-Mathematical models are tools used to represent real-world phenomena using *mathematical equations*, formulas, and relationships. These models are used to help understand complex systems and make predictions about their behavior under different conditions. Mathematical models help researchers test hypotheses, design experiments, and make decisions based on data-driven insights. Mathematical models can range from simple equations to highly complex simulations, and their effectiveness depends on how well they capture the relevant aspects of the real-world system being modeled. Overall, mathematical models are powerful tools for understanding and predicting the behavior of complex systems.
+Mathematical models are tools used to represent real-world phenomena using *mathematical equations*, formulas, and relationships. These models are used to help understand complex systems and make predictions about their behavior under different conditions. Mathematical models help us test hypotheses, design experiments, and make decisions based on data-driven insights. Mathematical models can range from simple equations to highly complex simulations, and their effectiveness depends on how well they capture the relevant aspects of the real-world system being modeled. Overall, mathematical models are powerful tools for understanding and predicting the behavior of complex systems.
 
 The **SIR** *epidemiological model* is a mathematical model used to study the spread of infectious diseases. It is named after the three compartments it divides a population into: **susceptible (S)**, **infected (I)**, and **recovered (R)**. The model **assumes** that every member of a population is either susceptible, infected, or recovered and cannot move between these compartments except through infection and recovery, but these assumptions can be changed. 
 
@@ -206,13 +209,13 @@ By analyzing the rates of infection and recovery, the SIR model can help researc
 
 #### The "SIR" model
 
-In the simplest SIR model we assume there are no births or deaths. 
+In the simplest SIR model we assume there are no births or deaths (i.e. demography). 
 
 We assume susceptible individuals (S) become infected and move into the infected class (I). 
 
 After some period of time, infected individuals recover and move into the recovered (or immune) class (R). 
 
-Once immune, they remain so for life (i.e. they do not leave the recovered class). 
+Once immune, they remain so for life, i.e. they do not leave the recovered class because there is no loss of immunity. 
 
 The corresponding equations are given by
 $$dS/dt = -β*S*I$$
@@ -237,8 +240,10 @@ For the SIR model, $R_0=βN/γ$, where $N=S+I+R$ is the total (constant) populat
 Since $R_0$ and the infectious period are more intuitive parameters, we use these as inputs for the built-in SIR model. We can then calculate $β$ as:
 
 $$β=R_0γ/N$$
+  
+Lastly, $R_0$ is a special case of $R_eff$, the effective reproduction number, which is when there is immunity in the population, i.e. the population is not totally naive.
 
-### Session 2b - Introduction to running different models
+### Running dynamics models
 
 We have seen for to run some *statistical models* above. Now let's look at how to run some mathematical models. 
 
@@ -287,13 +292,13 @@ matplot(x = times, y = out, type = "l",
 legend(40, 0.7, c("Susceptible", "Infected", "Recovered"), pch = 1, col = 2:4, bty = "n")
 ```
 
-This code uses the **deSolve** package in R to simulate the **SIR model** using the **Runge-Kutta** method. 
+This code uses the **deSolve** package in R to simulate the **SIR model**. There are actually many ways that this can be done, but here this happens to use the **Runge-Kutta** method.
 
 The **dS**, **dI**, and **dR** functions define the differential equations for the model.
 
-The **ode** function *integrates the equations over time* to produce the simulated population sizes for each time step. 
+The **ode()** function *integrates the equations over time* to produce the simulated population sizes for each time step. 
 
-The final **matplot** command generates a plot of the results, showing the number of susceptible, infected, and recovered individuals over time. Here we just used the *base* **matplot()** functions.
+The final **matplot()** command generates a plot of the results, showing the number of susceptible, infected, and recovered individuals over time. Here we just used the *base* **matplot()** functions.
 
 Now we are going to install a **Shiny** app, which is an interactive document that has a user interface. Note this might take some time to install.
 
