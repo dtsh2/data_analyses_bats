@@ -17,9 +17,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 To import data, we need to first tell R where the data are and then import those data. 
 
-Data are best stored as **.csv** files for our purposes, but R can handle many different source file types ad these may be more appropriate, depending on what you are doing.
+Data are best stored as **.csv** files for our purposes, but R can handle many different source file types and these may be more appropriate, depending on what you are doing.
 
-When you *download* a *GitHub repository*, like course we are using now, the files in the repository are downloaded to a *local directory* on your machine. To set the *working directory* *path* in an R script so that it finds the files after downloading the repository, you can use relative paths.
+When you *download* a *GitHub repository*, like course we are using now, the files in the repository are downloaded to a *local directory* on your machine. To set the *working directory* *path* in an R script so that it finds the files after downloading the repository, you can use **relative paths**.
 
 For example, in this repository we have a folder named *data* and it contains a *.csv* file named **TableS1_raw_clinical_data.csv**. You can set the **working directory** to the **data** folder using the relative path **./data** using the **setwd()** function like this:
 
@@ -38,7 +38,7 @@ The **setwd()** function sets the working directory to the *data* folder in the 
 
 **Note that you'll need to change the relative path to match the location of the folder in your repository in the future**
 
-For example, here's an example R script that imports a .csv file named *example_data.csv* from a folder named *data_folder* and converts it into a dataframe with headers:
+For example, here's an example R script that imports a .csv file named *example_data.csv* from a folder named *data_folder* and converts it into a dataframe with headers. **Note that this will not work without editing.** Also, we are using the **#** symbol here to *comment* out the text so that it does not run. 
 
 ```{r}
 # Set the path to the data folder
@@ -51,7 +51,7 @@ For example, here's an example R script that imports a .csv file named *example_
 #print(example_data)
 ```
 
-**Note that this will not work without editing.** Also, we are using the **#** symbol here to *comment* out the text so that it does not run. If we delete the *#* symbol and run it it will produce an error message.
+If we delete the *#* symbol and run it it will produce an error message.
 
 But in this script, we first set the path to the data folder using the *data_path* variable. Then we import the *.csv* file using the **read.csv()** function as above and specify the full path to the file using **paste0()** which combines the first path (the *data_path* variable) to the actual data set we want (here, *example_data.csv*).
 
@@ -60,10 +60,10 @@ Note that you can also directly import the data using RStudio, as in this image:
 ![data import](figures/data_import.png)
 Next we are going to work with the data we just imported. 
 
-The data we imported came from a paper, *SARS-CoV-2 integral membrane proteins shape the serological responses of COVID-19 patients* by Martin et al. You can find the paper here: https://doi.org/10.1016/j.isci.2021.103185 and the data here:
+The data we imported came from a paper, *SARS-CoV-2 integral membrane proteins shape the serological responses of COVID-19 patients* by Martin et al. The data are in the folder that comes with this workshop git repository, but you can find the paper here: https://doi.org/10.1016/j.isci.2021.103185 and the data here:
 https://data.mendeley.com/datasets/69tvkst9ct/1 
 
-It's the type of data we will be collecting during this project, except that they are from people and not bats.
+This is the type of data we will be collecting during this project, except that they are from people and not bats.
 
 Let's look at the data, using two alternative ways:
 
@@ -80,7 +80,7 @@ You can tell what data type these are by the **<****int****>** for integer in th
 
 To change the data type of a column in a newly imported data frame using tidyverse, you can use the **mutate()** function from the *dplyr* package.
 
-Here's an example of how to change the data type of the *Sex* column to a *factor*:
+Here's an example of how to change the data type of the *Sex* column to a *factor* and check it using the **glimpse()** function:
 
 ```{r}
 library(dplyr)
@@ -157,7 +157,7 @@ These data are in the wrong format because of the "-" symbols, so R thinks that 
 example_data <- mutate(example_data, Total.Ab.Roche = as.numeric(Total.Ab.Roche))
 ```
 
-Note that you get a **warning**, but this is fine. This is warning us that there are **NA**s. These are fine and telling us that we have missing data.
+Note that you get a **warning**, but this is fine. This is warning us that there are **NA**s. These are fine and telling us that we have missing data (the - in the above).
 
 ```{r}
 print(example_data$Total.Ab.Roche)
@@ -191,7 +191,7 @@ Now we have the data ready for analyses. We will start with some plotting.
 
 Personally, I think plotting data is extremely helpful. It tells us so much and helps make sure that the data are as we expect, plus it tells us what we might see in the analyses, even before we have performed them. Having plotted your data can also help you identify if you have errors in your analyses, because you might get a result that is unexpected. This might be a real result or an error.
 
-*Note that in this section, like others, we are not necessarily always going to use the most useful plot for the data, because this is a workshop.*
+*Note that in this section, like others, we are not necessarily always going to use the most useful plot for the data, because this is a workshop and we are using these as training material and exercises.*
 
 Let's start by plotting one of the antibody titres by date, just to start:
 
@@ -203,7 +203,7 @@ ggplot(example_data, aes(x = Date.of.symptoms, y = IgG_S)) +
 
 The data of the symptoms may not be useful. Plus, because these data are from different patients they should not be plot as a line like this.
 
-Now let's plot something slightly more meaningful, the time from the symptoms a patient reported to a blood sample with the titre and use a better plot method for these data:
+Now let's plot something slightly more meaningful, the time from the symptoms a patient reported to a blood sample with the titre, and use a better plot method for these data:
 
 ```{r}
 library(ggplot2)
@@ -271,16 +271,16 @@ example_data %>%
       legend.position="none",
       plot.title = element_text(size=11)
     ) +
-    ggtitle("A 'Violin' wrapping a boxplot, coloured by 'Sex' ") +
+    ggtitle("A 'Violin' wrapping a boxplot of the IgG S data, coloured by 'Sex' ") +
     xlab("") +
   ylab("IgG S")
 ```
 
-We will now break this down, but you do not need to learn this, this is just to help see how code works:
+We will now break this down. You do **not** need to learn this now, this is just to help see how code works:
 
-* *example_data %>%* is the data set and uses the *pipe* symbol (%>%) to say what to do with it and tell R that there is more to come.
+* *example_data %>%* is the data set name and uses the *pipe* symbol (%>%) to say what to do with it and tell R that there is more to come.
 
-* *left_join(sample_size) %>%* the **left_join()** function in R is used to combine two data frames based on a common column, keeping all the rows from the left data frame and adding matching rows from the right data frame.
+* *left_join(sample_size) %>%* uses the **left_join()** function, which is used to combine two data frames based on a common column, keeping all the rows from the left data frame and adding matching rows from the right data frame.
 
 * *mutate(myaxis = paste0(Sex, "\n", "n=", num)) %>%* uses the **mutate()** function and the **paste()** function to create a new column with the *Sex* data and the number of those.
 
