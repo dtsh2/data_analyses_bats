@@ -11,6 +11,10 @@ The course material provides an introduction to R and Rstudio (an integrated dev
 <br>
 To follow this course, you have to install R, Rstudio and JAGS beforehand.
 <br>
+To install JAGS go to here: https://sourceforge.net/projects/mcmc-jags/files/
+<br>
+To install R and RStudio you can go to here: https://posit.co/download/rstudio-desktop/
+<br>
 There is also a short script called Session 0 that can be run to make sure all the packages are installed prior to running the workshop, though how to install packages is also part of the course. This is provided only so that packages can be installed before the course in case there are internet issues that might delay the course.
 
 ## Course organization
