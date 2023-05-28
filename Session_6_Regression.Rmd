@@ -9,15 +9,17 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Session 6
 
-**Session 6** contains an introduction to regression analyses using serology data.
+**Session 6** contains an introduction to regression analyses using serology data and model selection techniques.
+
+### 6a - Logistic regression
 
 Earlier we were introduced to *linear regression* in **Session 4**.
 
-In the linear regression we looked at the data were assumed to be from a *normal*, also known as a *Gaussian*, distribution, is a probability distribution that is symmetric and bell-shaped. 
+In the linear regression we looked at the data were assumed to be from a *normal*, also known as a *Gaussian*, distribution. This is the familiar probability distribution that is symmetric and bell-shaped. 
 
-In a normal distribution the majority of observations cluster around the *mean*, with fewer observations further away from the mean. The distribution is characterized by two parameters, the **mean** (**$μ$**) and the **standard deviation** (**$σ$**), which determine the location and spread of the distribution, respectively. The mean is the central point around which the distribution is centered, while the standard deviation measures how much the observations deviate from the mean. 
+In a normal distribution the majority of observations cluster around the *mean*, with fewer observations further away from the mean. The distribution is characterized by two parameters, the **mean** (**$μ$**) and the **standard deviation** (**$σ$**), which determine the location and spread of the distribution, respectively. The mean is the central point around which the distribution is centered, while the standard deviation measures how much the observations deviate from the mean. We will use different distributions later and we used some different ones earlier to simulate data.
 
-However, serological data is usually converted to **positive** or **negative** and so there is a **single binary dependent variable**. 
+However, *serological data* are usually converted to *antibody (sero-)* **positive** or *antibody (sero-)* **negative** and so there is a **single binary dependent variable**. 
 
 **Logistic regression** is a statistical technique that we use to model the relationship between a binary dependent variable and one or more independent variables. 
 
@@ -57,7 +59,7 @@ This is binary data. Now lets plot that in the *base* plot:
 plot(example_data$Result.Beckman)
 ```
 
-We can see that not all the data are *NEG* or *POS*, so we will have to exclude those for analyses. The simplest way will be to make a new column using a conditional . 
+We can see that not all the data are *NEG* or *POS*, so we will have to exclude those for analyses. One simple way is to make a new column using a conditional statement. 
 
 ```{r}
 library(tidyverse)
@@ -75,7 +77,7 @@ glimpse(example_data)
 
 ```
 
-Let's look at the probability of an antibody test result (*Test.result*; the **response variable**) to one **predictor variable**; here we will use *age*.
+Let's look at the probability of an antibody test result (*Test.result*; the **response variable**) to one **predictor variable**; here we will use *age*. We will use the **gml()** function and specify **family = binomial** to use the logistic model.
 
 ```{r}
 model1 <- glm(Test.result ~ Age, example_data, family = binomial)
@@ -95,9 +97,9 @@ In both ways of viewing the results we can see some key results. These are:
 
 The *coefficients* represent the **change in the log odds** of the outcome variable associated with a one-unit increase in the predictor variable, holding all other variables constant.
 
-The Wald tests assess the **significance** of each predictor variable in the model. The **p-value** associated with each coefficient indicates the probability of observing such an extreme result (or more extreme) if the null hypothesis (that the coefficient is zero) were true.
+The **p-value** associated with each coefficient indicates the probability of observing such an extreme result (or more extreme) if the null hypothesis (that the coefficient is zero) were true.
 
-The remaining outputs provide information about the model's goodness of fit, such as the **deviance**, which can be used to assess the overall fit of the model, and the **AIC** that can be used to compare different models and determine the best fit.
+The remaining outputs provide information about the model's goodness of fit, such as the **deviance**, which can be used to assess the overall fit of the model, and the **AIC** that can be used to compare different models and determine the best fit. We will come to this later.
 
 But we can also do some of this straight in ggplot:
 
@@ -109,7 +111,7 @@ ggplot(example_data, aes(x=Age, y=Test.result)) +
                 method.args = list(family=binomial))
 ```
 
-This suggests there is not a relationship with age and the test result, as the line looks very straight horizontally. And we can add **confidence intervals** around the fitted line to see how much **uncertainty** there is around that.
+This suggests there is not a relationship with age and the test result, as the line looks very straight horizontally. This is seen in the *glm* results above, where the coefficient is close to zero. And we can add **confidence intervals** around the fitted line to see how much **uncertainty** there is around that.
 
 ```{r}
 # Plot Predicted data and original data points
@@ -119,7 +121,7 @@ ggplot(example_data, aes(x=Age, y=Test.result)) +
                 method.args = list(family=binomial))
 ```
 
-Now we can can add another predictor variable:
+Now we can can add another predictor variable and by using some other packages plot the results a little differently:
 
 ```{r}
 # Load necessary packages
@@ -134,7 +136,7 @@ ggPredict(model2, se=TRUE, interactive=F,digits=3)
 
 ```
 
-Note that nothing here is significant, partly because our sample is really all of positive cases. But let's test the hypothesis that the time since the onset of symptoms predicts the test result. 
+Note that nothing here is significant in our model, partly because our sample is really all of positive cases. But let's test the hypothesis that the time since the onset of symptoms predicts the test result. 
 
 ```{r}
 # Load necessary packages
@@ -151,7 +153,7 @@ ggPredict(model3, se=TRUE, interactive=F,digits=3)
 
 Time from symptoms to the blood sample is a better predictor of the test result than age and sex, and the p-value (0.03) is below 0.05, a commonly used cut off for *significance*.
 
-Now let's **simulate** a larger data set that has some more important and significant predictor variables and analyse this data set:
+Now let's **simulate** a larger data set that has some more important and significant predictor variables that have a greater effect on the response and analyse this data set. We will simulate a data set with age, sex and location, all things we might be interested in predicting infection in bat populations:
 
 ```{r}
 # Set random seed for reproducibility
@@ -191,6 +193,7 @@ summary(model4)
 #ggPredict(model4, interactive = T, se=T)
 
 ```
+Note the significant coavariates above. An easy was to see them is with the **$ * $** or **$ ** $**. But note effect sizes are also important. 
 
 Now let's look at some interactions by replacing the **+** in the above equations with **$*$**:
 
@@ -202,7 +205,9 @@ model5 = glm(response ~ location * age * sex, df, family = binomial)
 summary(model5)
 ```
 
-This is the type of model that you might think if every location and both sexes (here binary for bats) had different results that varied with age. This is quite complex and while interactions can be extremely important, these analyses need to be undertaken with care.
+This is the type of model that you might use if you think that every location and both sexes (here binary for bats) had different results that varied with age. This is quite complex and while interactions can be extremely important, these analyses need to be undertaken with care.
+
+### 6b - Model selection
 
 ##### Choose a model by AIC in a Stepwise Algorithm
 
@@ -212,9 +217,9 @@ AIC is a statistical measure used for model selection and comparison and provide
 
 The AIC score is calculated using the following formula: $AIC = -2log(L) + 2k$,
 
-where L represents the maximum likelihood estimation of the model and k is the number of parameters in the model. The AIC score quantifies the trade-off between model accuracy and complexity, with lower values indicating better models.
+where L represents the maximum likelihood estimation of the model and k is the number of parameters in the model. The **log** is essentially for analytical convenience. The AIC score quantifies the trade-off between model accuracy and complexity.
 
-When comparing multiple models using AIC, the model with the lowest AIC score is considered the best fit. This approach considers both the goodness of fit (captured by the likelihood term) and the model complexity (represented by the number of parameters). By penalizing models with a higher number of parameters, AIC helps to prevent **overfitting** and encourages the selection of simpler models.
+When comparing multiple models using AIC, the model with the lowest AIC score is considered the best fit. This approach considers both the goodness of fit (captured by the likelihood term, L) and the model complexity (represented by the number of parameters, k). By penalizing models with a higher number of parameters, AIC helps to prevent **overfitting** and encourages the selection of simpler models.
 
 Here's what that looks like using the **stepAIC()** function in the **MASS** package.
 
@@ -232,11 +237,11 @@ predicted.classes <- ifelse(probabilities > 0.5, "pos", "neg")
 # Model accuracy
 mean(predicted.classes==df$response)
 ```
-
+If you change ``trace = FALSE'' to ``trace = TRUE'' you will see the steps.
 
 ##### Plotting regression models
 
-There are many plots that can be done after doing regression analyses, including of the residuals, but for now we will simply plot the results.
+There are many plots that can be done after doing regression analyses, including of the residuals, but for now we will simply plot the model coefficient results.
 
 ```{r}
 # Load required libraries
@@ -246,4 +251,4 @@ library(GGally)
 ggcoef(model)
 
 ```
-
+Here we can see the point estimates, their 95\% confidence intervals and if these are greater than or less than 0.
