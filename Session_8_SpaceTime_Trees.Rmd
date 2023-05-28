@@ -17,7 +17,9 @@ Spatial data refers to any data that is associated with a specific location or g
 
 Statistical analysis of spatial data involves the application of statistical techniques to understand the spatial patterns, relationships, and distributions of the data. Spatial data analysis can identify hotspots of disease outbreaks, assess the impact of land-use changes on ecosystems, model the spread of invasive species, etc.
 
-One of the key components of spatial data analysis is **spatial autocorrelation**, which measures the degree of similarity or dissimilarity between spatially adjacent observations. It helps identify **clusters** or **spatial patterns** in the data, enabling us to understand the spatial dependence and spatial processes underlying the phenomena being studied.
+One of the key components of spatial data analysis is **spatial autocorrelation**, which measures the degree of similarity or dissimilarity between spatially adjacent observations. It helps identify **clusters** or **spatial patterns** in the data, enabling us to understand the spatial dependence and spatial processes underlying the phenomena being studied. 
+
+Note that spatial autocorrelation can mean that data violate the assumption of independence of residuals and can call into question the validity of hypothesis testing, so it can be a problem for analyses.
 
 Spatial statistics offer a range of analytical methods, such as spatial interpolation, spatial regression, point pattern analysis, and spatial clustering.
 
@@ -39,6 +41,8 @@ data(chorley)
 # Plot the dataset to visualize the point locations
 plot(chorley)
 ```
+
+These data are larynx and lung cancer cases plotted at the locations of their homes.
 
 Next, let's computes the **K-function** using the **Kest()** function, a common tool for testing for **clustering** in **spatial point data**. The K-function measures the *expected number of points within a certain distance of each point*, and compares this to the *expected number of points if the points were randomly distributed*. 
 
@@ -92,13 +96,15 @@ plot(density(chorley, sigma = 1), main = "Sigma 1.0")
 
 ### Session 8b - Temporal data
 
-We have already met time series data in our **SIR** modelling and **fitting** models to data sessions, **Sessions 4 and 7**, but there are many other types of analyses that we can do.
+We have already met time series data in other sessions, including in our **SIR** modelling and **fitting** models to data sessions, **Sessions 4 and 7**, but there are many other types of analyses that we can do.
 
-Time series data captured information about how a variable or phenomenon changes and evolves over time. 
+Time series data capture information about how a variable changes and evolves over time. 
 
 Like spatial analyses, analysis of time series data involves examining the patterns, trends, and dependencies within the data to extract meaningful insights and make predictions, including forecasting into the future based on historical patterns.
 
 One of the fundamental characteristics of time series data is its **temporal dependency**, where the value of a given observation is often influenced by its previous values. This dependency can be utilized to identify trends, seasonal patterns, and other temporal relationships within the data.
+
+Like spatial autocorrelation, temporal autocorrelation can be a problem because it can also violate the assumption about the independence of residuals and call into question the validity of hypothesis testing.
 
 Statistical analysis of time series data encompasses a wide range of techniques and models, including descriptive statistics, decomposition, autocorrelation, and forecasting methods that we will introduce here. 
 
@@ -159,7 +165,7 @@ plot(forecast_ts_air, main = "Forecasts from ARIMA")
 
 ```
 
-That does not look convincing, especially as time goes on, suggesting this is not an appropriate model for these data.
+That does not look convincing, especially as time goes on, suggesting this is not an appropriate model for these data. However, it gives us an idea of the approach.
 
 ##### Example 2
 
@@ -229,15 +235,7 @@ ggplot(counts, aes(x = epiweek, y = case)) +
      geom_line()
 ```
 
-In the epirhandbook training they checked for duplicates using this code:
-
-```{r}
-## get a vector of TRUE/FALSE whether rows are duplicates
-are_duplicated(counts, index = epiweek) 
-
-```
-
-Note that they then show how you can **interpolate** missing data into data sets using this code to do linear interpolation between data:
+Next we can **interpolate** missing data into data sets using this code to do linear interpolation between data:
 
 ```{r}
 ## create a variable with missing data instead of weeks with reporting issues
@@ -289,7 +287,7 @@ ggplot(counts, aes(x = epiweek)) +
      geom_line(aes(y = case)) + 
      geom_line(aes(y = ma_4wk), colour = "red")
 ```
-Next, let's do a **decomposition** on those cases using another STL function similar to the above and plot it directly using the **autoplot()** function:
+Next, let's do a **decomposition** on those cases using another function, **STL()** similar to the **decompose()** function above and plot it directly using the **autoplot()** function:
 
 ```{r}
 counts %>% 
@@ -298,6 +296,7 @@ counts %>%
   components() %>%
   autoplot()
 ```
+Have a think about the above data.
 
 **Autocorrelation** is the correlation between two observations at different points in a time series. For example, samples taken close together in time might have a strong *positive* or *negative* **correlation**. When these correlations are present, they indicate that past values influence the current value. **Autocorrelation** and **partial autocorrelation** functions allow us to see this and understand the properties of time series data, fit the appropriate models, and make forecasts.
 
@@ -324,7 +323,7 @@ counts %>% as_tsibble(., index = date) %>%
   ## show a plot
   autoplot()
 ```
-The **PACF** results look very different. This is because partial autocorrelation is the relationship between an observation in a time series with observations at prior time steps with the relationships of intervening observations removed. 
+The **PACF** results look very different. This is because partial autocorrelation is the relationship between an observation in a time series with observations at prior time steps with the relationships of intervening observations removed.  PACF results are harder to interpret sometimes, and here there is a significant correlation at lag 1 followed by correlations that are not significant and some that are (indicated by being over the dashed lines).
 
 We can see that these data are **not independent**, and we can test for that using the Ljung–Box test statistic (sometimes called the *'portmanteau'* test) for examining the null hypothesis of independence in a given time series.
 
@@ -353,7 +352,7 @@ Phylogenetic analyses involve several key steps:
 
 There are many ways of doing the above. Here we will assume these are all done and sequence alignments have been performed by any number of tools (e.g. from here https://www.ebi.ac.uk/Tools/msa/) and that the phylogenetic analyses have been performed (e.g. using BEAST here https://beast.community/).
 
-Here we will import a **newick** file that has a tree in that has already been downloaded from  https://4va.github.io/biodatasci/data.html
+Here we will import a **newick** file that has a tree in that has already been downloaded and is in the github respository for this workshop from https://4va.github.io/biodatasci/data.html
 
 We will be using examples from https://yulab-smu.top/treedata-book/ 
 
@@ -396,6 +395,7 @@ We can disable the scaling and produce a **cladogram** instead using **branch.le
 ```{r}
 ggtree(tree, branch.length="none")
 ```
+Note that cladograms have no information shown about time. The **branch lengths** are not meaningful here.
 
 Next we can plot the tree and highlight clades of interest:
 
@@ -455,4 +455,5 @@ ggtree(tree, mrsd="2013-01-01") +
 
 ```
 
+We covered a lot of material is a short time during this workshop. This is meant to simply get you started.  Enjoy.
 ### The END
