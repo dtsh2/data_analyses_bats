@@ -6,7 +6,9 @@ output: github_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy('')
+```
 ## Session 1
 
 **Session 1** contains an introduction to **R** and **RStudio**, **data types** and **basic data manipulation** in R, with a brief introduction to **plotting** in base R.
@@ -64,7 +66,7 @@ and then use:
 
 `Control + Enter'
 
-```{r}
+```{r, class.source='klippy'}
 print("Hello, world!") 
 ```
 
