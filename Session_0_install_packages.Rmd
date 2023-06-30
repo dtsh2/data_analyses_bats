@@ -3,10 +3,6 @@ title: "R workshop"
 output: github_document
 ---
 
-```{r klippy, echo=FALSE, include=TRUE}
-klippy::klippy()
-```
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -17,7 +13,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This will make more sense as we go through the workshop but will be run before it in preparation for the days in case there are issues with internet.
 
-```{r,class.source='klippy'}
+```{r}
+# install.packages("remotes")
+remotes::install_github("rlesur/klippy")
 # List of required packages
 required_packages <- c("ggplot2","tidyverse","dplyr","hrbrthemes","viridis","ggpubr","GGally","ggridges","tidyr","scales","deSolve","shinySIR","epiR","pROC","mixtools","broom","ggiraphExtra","MASS","bbmle","coda","rjags",spatstat","forecast","pacman","devtools","BiocManager")
 
