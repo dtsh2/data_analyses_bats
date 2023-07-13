@@ -15,6 +15,8 @@ To install JAGS go to here: https://sourceforge.net/projects/mcmc-jags/files/
 <br>
 To install R and RStudio you can go to here: https://posit.co/download/rstudio-desktop/
 <br>
+To install RTools you can go to here: https://cran.r-project.org/bin/windows/Rtools/
+<br>
 To install the LaTex package, open R and run the following code: tinytex::install_tinytex()
 <br>
 There is also a short script called Session 0 that can be run to make sure all the packages are installed prior to running the workshop, though how to install packages is also part of the course. This is provided only so that packages can be installed before the course in case there are internet issues that might delay the course.
