@@ -34,7 +34,7 @@ The output of logistic regression is a set of coefficients, which can be used to
 
 Let's import our recently created and saved data set, **example_data.csv** and begin:
 
-```{r}
+```{r, class.source='klippy'}
 library(tidyverse)
 example_data <- read.csv("data/example_data.csv")
 glimpse(example_data)
@@ -42,7 +42,7 @@ glimpse(example_data)
 
 Let's change the dates and factors again:
 
-```{r}
+```{r, class.source='klippy'}
 example_data <- example_data %>%
   mutate_at(vars("Cohort", "Sex", "Result.Beckman", "Result.Roche"), as.factor)
 example_data <- example_data %>%
@@ -54,19 +54,19 @@ glimpse(example_data)
 
 Now let's think about the *binary antibody test results* data; let's choose *Result.Beckman*:
 
-```{r}
+```{r, class.source='klippy'}
 print(example_data$Result.Beckman)
 ```
 
 This is binary data. Now lets plot that in the *base* plot:
 
-```{r}
+```{r, class.source='klippy'}
 plot(example_data$Result.Beckman)
 ```
 
 We can see that not all the data are *NEG* or *POS*, so we will have to exclude those for analyses. One simple way is to make a new column using a conditional statement. 
 
-```{r}
+```{r, class.source='klippy'}
 library(tidyverse)
 
 # use mutate() to create new column based on factors in column x
@@ -84,13 +84,13 @@ glimpse(example_data)
 
 Let's look at the probability of an antibody test result (*Test.result*; the **response variable**) to one **predictor variable**; here we will use *age*. We will use the **gml()** function and specify **family = binomial** to use the logistic model.
 
-```{r}
+```{r, class.source='klippy'}
 model1 <- glm(Test.result ~ Age, example_data, family = binomial)
 ```
 
 We can look at the model in different ways:
 
-```{r}
+```{r, class.source='klippy'}
 model1
 summary(model1)
 ```
@@ -108,7 +108,7 @@ The remaining outputs provide information about the model's goodness of fit, suc
 
 But we can also do some of this straight in ggplot:
 
-```{r}
+```{r, class.source='klippy'}
 # Plot Predicted data and original data points
 ggplot(example_data, aes(x=Age, y=Test.result)) + 
   geom_point() +
@@ -118,7 +118,7 @@ ggplot(example_data, aes(x=Age, y=Test.result)) +
 
 This suggests there is not a relationship with age and the test result, as the line looks very straight horizontally. This is seen in the *glm* results above, where the coefficient is close to zero. And we can add **confidence intervals** around the fitted line to see how much **uncertainty** there is around that.
 
-```{r}
+```{r, class.source='klippy'}
 # Plot Predicted data and original data points
 ggplot(example_data, aes(x=Age, y=Test.result)) + 
   geom_point() +
@@ -128,7 +128,7 @@ ggplot(example_data, aes(x=Age, y=Test.result)) +
 
 Now we can can add another predictor variable and by using some other packages plot the results a little differently:
 
-```{r}
+```{r, class.source='klippy'}
 # Load necessary packages
 library(ggplot2)
 library(dplyr)
@@ -143,7 +143,7 @@ ggPredict(model2, se=TRUE, interactive=F,digits=3)
 
 Note that nothing here is significant in our model, partly because our sample is really all of positive cases. But let's test the hypothesis that the time since the onset of symptoms predicts the test result. 
 
-```{r}
+```{r, class.source='klippy'}
 # Load necessary packages
 library(ggplot2)
 library(dplyr)
@@ -160,7 +160,7 @@ Time from symptoms to the blood sample is a better predictor of the test result 
 
 Now let's **simulate** a larger data set that has some more important and significant predictor variables that have a greater effect on the response and analyse this data set. We will simulate a data set with age, sex and location, all things we might be interested in predicting infection in bat populations:
 
-```{r}
+```{r, class.source='klippy'}
 # Set random seed for reproducibility
 set.seed(123)
 
@@ -189,7 +189,7 @@ df<-data.frame(response = response,
 
 Now let's try the logistic model:
 
-```{r}
+```{r, class.source='klippy'}
 library(ggplot2)
 library(ggiraphExtra)
 
@@ -202,7 +202,7 @@ Note the significant coavariates above. An easy was to see them is with the **$ 
 
 Now let's look at some interactions by replacing the **+** in the above equations with **$*$**:
 
-```{r}
+```{r, class.source='klippy'}
 library(ggplot2)
 library(ggiraphExtra)
 
@@ -228,7 +228,7 @@ When comparing multiple models using AIC, the model with the lowest AIC score is
 
 Here's what that looks like using the **stepAIC()** function in the **MASS** package.
 
-```{r}
+```{r, class.source='klippy'}
 library(MASS)
 library(tidyverse)
 # Fit the model
@@ -248,7 +248,7 @@ If you change ``trace = FALSE'' to ``trace = TRUE'' you will see the steps.
 
 There are many plots that can be done after doing regression analyses, including of the residuals, but for now we will simply plot the model coefficient results.
 
-```{r}
+```{r, class.source='klippy'}
 # Load required libraries
 library(ggplot2)
 library(GGally)
