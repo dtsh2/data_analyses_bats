@@ -1,5 +1,5 @@
 ---
-title: "R workshop"
+title: "R workshop Session 0"
 output: html_document
 ---
 
