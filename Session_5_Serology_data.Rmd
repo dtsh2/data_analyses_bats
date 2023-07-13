@@ -24,7 +24,7 @@ The second thing to remember is that antibody populations are dynamics and chang
 
 Let's now import our recently created and saved data set, **example_data.csv** and begin:
 
-```{r}
+```{r, class.source='klippy'}
 library(tidyverse)
 example_data <- read.csv("data/example_data.csv")
 glimpse(example_data)
@@ -32,7 +32,7 @@ glimpse(example_data)
 
 Remember that R has again imported the data and made the text as *character* data types when we want some as *dates* and some as *factors*. Let's change those:
 
-```{r}
+```{r, class.source='klippy'}
 example_data <- example_data %>%
   mutate_at(vars("Cohort", "Sex", "Result.Beckman", "Result.Roche"), as.factor)
 example_data <- example_data %>%
@@ -45,40 +45,40 @@ Note we had to change the **as.Date()** format to *"%Y-%m-%d"*
 
 Now let's think about the *antibody titres* data; let's choose *IgG_S* as an example data set.
 
-```{r}
+```{r, class.source='klippy'}
 print(example_data$IgG_S)
 ```
 
 This is continuous numeric data, so let's do some basic statistics on these:
 
-```{r}
+```{r, class.source='klippy'}
 summary(example_data$IgG_S)
 ```
 This tells us that the *minimum* (Min.) is 1.099, *first quartile* (1st Qu.) 11.595, *median* (Median) 27.031, *mean* (Mean) 34.551, *third quartile* (3rd Qu.) 47.903 and *maximum* (Max.) 156.733.
 
 We can summarize that using another function, **boxplot.stats()**:
 
-```{r}
+```{r, class.source='klippy'}
 boxplot.stats(example_data$IgG_S, do.conf = FALSE)
 ```
 Which also tells us the sample size (n=51) and that there are some **outliers** ($out). These may or may not be important. 
 
 Now lets plot that in several ways. In the *base* plot it looks like this:
 
-```{r}
+```{r, class.source='klippy'}
 hist(example_data$IgG_S)
 ```
 
 We have seen this before, but let's look at the data more. 
 
-```{r}
+```{r, class.source='klippy'}
 hist(example_data$IgG_S, freq = FALSE)
 lines(density(example_data$IgG_S))
 ```
 
 In the *tidyverse* plot the histogram looks like:
 
-```{r}
+```{r, class.source='klippy'}
 ggplot(example_data, aes(x=IgG_S)) + 
   geom_histogram()
 ```
@@ -99,7 +99,7 @@ How can we work out what is and is not positive?
 
 Let's plot some of the other *anti-spike antibody* data. We will use a different technique to what we did previously and just trying overlaying the different data:
 
-```{r}
+```{r, class.source='klippy'}
 #plot two histograms in same graph
 hist(example_data$IgG_S, 
      col=rgb(0,0,1,0.2),
@@ -124,7 +124,7 @@ However, let's *imagine* that these are *antibodies against different viruses*, 
 
 Let's make these into the *long format* data again:
 
-```{r}
+```{r, class.source='klippy'}
 library(tidyr)
 # Select columns to keep and gather
 cols_to_keep <- c("Patient")
@@ -141,20 +141,20 @@ glimpse(long_data)
 
 Now let's plot them in ggplot:
 
-```{r}
+```{r, class.source='klippy'}
 library(ggplot2)
 ggplot(long_data, aes(x=Titre, fill=Antibody)) + geom_histogram(alpha=0.6, position="identity")
 ```
 They look different; let's plot these as box plots and overlay the data:
 
-```{r}
+```{r, class.source='klippy'}
 ggplot(long_data, aes(x=Antibody, y=Titre, fill=Antibody)) +
   geom_boxplot() + geom_jitter(width = 0.1)
 ```
 
 Or even fancier, using a **violin** plot:
 
-```{r}
+```{r, class.source='klippy'}
 library(ggplot2)
 library(see)
 ggplot(long_data, aes(x = Antibody, y = Titre, fill = Antibody)) +
@@ -165,13 +165,13 @@ ggplot(long_data, aes(x = Antibody, y = Titre, fill = Antibody)) +
 
 We can test if there is statistical support for these coming from different distributions using a test called the **Kolmogorov-Smirnov Test**. This test is a *non-parametric* test and does not assume the data are from a *normal* distribution: 
 
-```{r}
+```{r, class.source='klippy'}
 ks.test(example_data$IgA_S, example_data$IgG_S)
 ```
 
 And we can plot this in another way:
 
-```{r}
+```{r, class.source='klippy'}
 plot(ecdf(example_data$IgA_S), main = "", xlim=c(0,130))
 plot(ecdf(example_data$IgG_S), add = TRUE, lty = "dashed")
 ```
@@ -182,7 +182,7 @@ Here the p-value is very low, so there is good support that they are different. 
 
 We can simulate some data from the same distributions to show what that would look like:
 
-```{r}
+```{r, class.source='klippy'}
 # Set seed for reproducibility
 set.seed(123)
 
@@ -200,7 +200,7 @@ ks.test(data1, data2)
 
 And then let's plot those the same way:
 
-```{r}
+```{r, class.source='klippy'}
 plot(ecdf(data1), main = "", xlim=c(10,55))
 plot(ecdf(data2), add = TRUE, lty = "dashed")
 ```
@@ -232,7 +232,7 @@ We can calculate the **sensitivity** and **specificity** by:
 
 The next example is lifted directly from the **epiR** package. It generates a data set listing test results (called *tes*) and true disease status (called *dis*):
 
-```{r}
+```{r, class.source='klippy'}
 library(epiR)
 library(tidyverse)
 dis <- c(rep(1, times = 744), rep(0, times = 842))
@@ -274,7 +274,7 @@ Receiver operating characteristic (ROC) curves illustrate the trade-off between 
 
 For learning purposes, let's begin using an inbuilt data set in the **pROC** package and ROCs:
 
-```{r}
+```{r, class.source='klippy'}
 library(pROC)
 rocobj <- plot.roc(aSAH$outcome, 
                    aSAH$s100b,
@@ -303,13 +303,13 @@ Interpreting the AUC value is, therefore, relatively straightforward. The higher
 
 We can simply read the values, but to simplify this, let's get the best **threshold**, specificity and sensitivity:
 
-```{r}
+```{r, class.source='klippy'}
 coords(rocobj,'best')
 ```
 
 Now let's use the *example_data* serology data **assuming** that the *Result.Beckman* is the truth and the *IgG_S* is the quantitative serology data we have:
 
-```{r}
+```{r, class.source='klippy'}
 rocobj2 <- plot.roc(example_data$Result.Beckman, 
                    example_data$IgG_S,
                    main = "Confidence intervals", 
@@ -329,7 +329,7 @@ Notice three things:
 * second, notice the blue shaded area is larger; this means that there is less certainty;
 * third, note that there are **two** *threshold* possibilities! Let's see those:
 
-```{r}
+```{r, class.source='klippy'}
 coords(rocobj2,'best')
 ```
 
@@ -342,7 +342,7 @@ Which threshold you used would depend on your **aims** - do you want to make sur
 
 Let's take a look at what those different results would look like:
 
-```{r}
+```{r, class.source='klippy'}
 library(ggplot2)
 library(ggpubr)
 select_Ig <- c("IgG_S")
@@ -390,7 +390,7 @@ Once the model is fit, the cut off point between the two bimodal peaks can be es
 
 Here is some R code that simulates a *bimodal distribution* and fits a mixture model to estimate the cut-off point where we use two **normal** distributions and a *maximum likelihood* approach:
 
-```{r}
+```{r, class.source='klippy'}
 # Simulate data from a bimodal distribution
 set.seed(123)
 n <- 1000
