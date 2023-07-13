@@ -1,5 +1,5 @@
 ---
-title: "Modelling workshop"
+title: "Modelling workshop: Session 1"
 output: html_document
 ---
 
