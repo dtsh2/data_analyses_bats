@@ -52,7 +52,7 @@ The **error term** is the part of the response variable that cannot be explained
 
 Let's import our newly created and saved serology data set, **example_data.csv** and begin:
 
-```{r}
+```{r, class.source='klippy'}
 library(tidyverse)
 example_data <- read.csv("data/example_data.csv")
 glimpse(example_data)
@@ -60,13 +60,13 @@ glimpse(example_data)
 
 Remember that if the data folder is not in the current working directory, we can specify the full file path instead:
 
-```{r}
+```{r, class.source='klippy'}
 #example_data <- read.csv("C:/Users/username/Documents/data/example_data.csv")
 ```
 
 Note that R has again R has imported the data and made the text as *character* data types when we want some as dates and some as factors. Let's change those:
 
-```{r}
+```{r, class.source='klippy'}
 example_data <- example_data %>%
   mutate_at(vars("Cohort", "Sex", "Result.Beckman", "Result.Roche"), as.factor)
 example_data <- example_data %>%
@@ -79,7 +79,7 @@ Note we had to change the **as.Date()** format to *"%Y-%m-%d"*
 
 Now we might want to work out if *antibody titres* are dependent on *age* and *sex*. We can choose one measure as the **response variable**; let's choose *IgG_S*.
 
-```{r}
+```{r, class.source='klippy'}
 print(example_data$IgG_S)
 ```
 
@@ -87,7 +87,7 @@ This is continuous numeric data.
 
 The **predictor variables** we want here in this example are *Sex* and *Age*.
 
-```{r}
+```{r, class.source='klippy'}
 print(example_data$Age)
 print(example_data$Sex)
 ```
@@ -96,19 +96,19 @@ These are *integer* and *factor* data types.
 
 The *parameters* of the model will tell us how the *IgG_S* changes in relation to these *predictors* in our data set. Here we will use a **linear regression model** as an example:
 
-```{r}
+```{r, class.source='klippy'}
 lm(IgG_S ~ Age + Sex, data = example_data)
 ```
 
 We can look at the *residuals* by using this:
 
-```{r}
+```{r, class.source='klippy'}
 lm(IgG_S ~ Age + Sex, data = example_data)$residuals
 ```
 
 Or we can simplify this to:
 
-```{r}
+```{r, class.source='klippy'}
 model1 <- lm(IgG_S ~ Age + Sex, data = example_data)
 model1$residuals
 ```
@@ -125,7 +125,7 @@ where **$y$** is the **response variable**, **$x$** is the **predictor variable*
 
 We will use some R code to plot this with some values. We will create a *data frame* called *df*, a model called *m*, a plot called *p* and an equation called *eq*:
 
-```{r}
+```{r, class.source='klippy'}
 # Create a ggplot of the data with the linear regression line
 library(ggplot2)
 
@@ -168,7 +168,7 @@ Specifically, **R<sup>2** quantifies the proportion of the total variation in th
 
 But R is very flexible, so we can write some code to both perform a model and plot the results. Here is an example using our *example_data*:
 
-```{r}
+```{r, class.source='klippy'}
 ggplotRegression <- function(fit){
   
   require(ggplot2)
@@ -183,7 +183,7 @@ ggplotRegression(lm(IgG_S ~ Age, data = example_data))
 
 Now let's add some text:
 
-```{r}
+```{r, class.source='klippy'}
 ggplotRegression <- function(fit){
   
   require(ggplot2)
@@ -254,7 +254,7 @@ We have seen for to run some *statistical models* above. Now let's look at how t
 
 We will start with the simple SIR model. Here's an example code in R to simulate an SIR model using the differential equations provided above:
 
-```{r}
+```{r, class.source='klippy'}
 ## Load deSolve package
 library(deSolve)
 
@@ -307,11 +307,11 @@ The final **matplot()** command generates a plot of the results, showing the num
 
 Now we are going to install a **Shiny** app, which is an interactive document that has a user interface. Note this might take some time to install.
 
-```{r}
+```{r, class.source='klippy'}
 #install.packages("shinySIR")
 ```
 
-```{r}
+```{r, class.source='klippy'}
 library(shinySIR)
 #run_shiny(model = "SIR")
 ```
