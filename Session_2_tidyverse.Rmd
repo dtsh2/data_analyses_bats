@@ -19,7 +19,7 @@ klippy::klippy('')
 
 **tidyverse** is a package of packages (e.g. *dplyr*, *ggplot2*). *tidyverse* uses slightly different *syntax* (symbols, etc.) than what we have mostly been using, though we have seen some *ggplot* syntax. For example, pipes (**%>%**) are a convenient tool and we will use them below. One difference is when using tidyverse data are usually organised as **tibbles** or **tbl** instead of **data frames**. We will use them now to see how they are used. First, let's look at an in-built data set, *diamonds*. Note there are actually a few ways that we can look at *diamonds* using different functions, a couple of which we saw in the **Session 1**:
 
-```{r}
+```{r, class.source='klippy'}
 library(tidyverse)
 head(diamonds) 
 str(diamonds)
@@ -31,13 +31,13 @@ Note what information the different ways of showing the data give you.
 
 We can use other approaches to look at the data. For example, if we want to look at all the *Premium* *cut* diamonds that cost over 13,000 dollars, we can filter for those using the following code:
 
-```{r}
+```{r, class.source='klippy'}
 filter(diamonds, cut=='Premium' & price >= 15000) 
 ```
 
 Now let's use the *tidyverse* syntax to find the *mean* *price* for the different *cut* diamonds using this code:
 
-```{r}
+```{r, class.source='klippy'}
 diamonds %>%  # line 1
   group_by(cut) %>%  # line 2
   summarize(m = mean(price)) %>% # line 3
@@ -53,7 +53,7 @@ This R script is use the **%>%** operator from the **dplyr** package installed t
 
 Another example using an in built data set is:
 
-```{r}
+```{r, class.source='klippy'}
 library(dplyr)
 data(mtcars)
 
@@ -69,7 +69,7 @@ In this example we use the **dplyr** package and *mtcars* dataset and **select()
 
 To find the average of three columns (*mpg*, *cyl*, and *hp*) in the filtered *mtcars* dataset, we can add the **summarize()** function from the **dplyr** package to the end of the chain of commands:
 
-```{r}
+```{r, class.source='klippy'}
 library(dplyr)
 mtcars %>%
   select(mpg, cyl, hp) %>%
@@ -85,7 +85,7 @@ Note the output will show the average *mpg*, *cyl*, and *hp* as separate columns
 
 We have already met **ggplot** so let's just get started. Now we will start using some data more similar to what we might get from serological studies. We will simulate some data that could represent antibody titres from samples from three bats over three days.
 
-```{r}
+```{r, class.source='klippy'}
 Bat <- c("N1", "N1", "N1",
          "N2", "N2", "N2",
          "N3", "N3", "N3") ## three bats, identified as N1, N2 and N3
@@ -108,7 +108,7 @@ Note that without using the **set.seed()** function, we will all have different 
 
 Let’s plot the titres by the individual bats, first by *Bat* as the x-axis:
 
-```{r}
+```{r, class.source='klippy'}
 library(ggplot2)
 ggplot(mydata, aes(x = Bat, y = Titer)) + 
   geom_point()
@@ -116,7 +116,7 @@ ggplot(mydata, aes(x = Bat, y = Titer)) +
 
 Second by *Date* as the x-axis:
 
-```{r}
+```{r, class.source='klippy'}
 library(ggplot2)
 ggplot(mydata, aes(x = Date, y = Titer)) + 
   geom_point()
@@ -124,7 +124,7 @@ ggplot(mydata, aes(x = Date, y = Titer)) +
 
 Third by *Date* again as the x-axis, but colouring the titres by the individual bat identification:
 
-```{r}
+```{r, class.source='klippy'}
 library(ggplot2)
 ggplot(mydata, aes(x = Date, y = Titer, colour = Bat)) + 
   geom_point(size = 2)
@@ -132,14 +132,14 @@ ggplot(mydata, aes(x = Date, y = Titer, colour = Bat)) +
 
 We can plot the mean titre for each bat by using this method:
 
-```{r}
+```{r, class.source='klippy'}
 ggplot(mydata, aes(x = Bat, y = Titer)) +
   stat_summary(fun = "mean", geom = "point")
 ```
 
 Or by using this *tidyverse* syntax for it all:
 
-```{r}
+```{r, class.source='klippy'}
 mydata %>%                            # name of the dataset
   group_by(Bat) %>%                   # grouping the data 
   summarize(m = mean(Titer)) %>%      # calculating the mean
@@ -150,7 +150,7 @@ mydata %>%                            # name of the dataset
 
 Now let's increase the simulated data set size. This can be done simply, such as by replicating it using the **replicate()** function any number of times. Here we will replicate the above data three times using this code:
 
-```{r}
+```{r, class.source='klippy'}
 library(dplyr)
 mydata <- bind_rows(replicate(3, mydata, simplify = FALSE))
 dim(mydata)
@@ -158,27 +158,27 @@ dim(mydata)
 ```
 Let's plot that to see two things; what **replicate()** does and what a function **geom_jitter()** does. First the plain ggplot from before:
 
-```{r}
+```{r, class.source='klippy'}
 ggplot(mydata, aes(x = Date, y = Titer, colour = Bat)) + 
      geom_point(size = 2)
 ```
 
 It looks like there are only three points, but this is because when we replicate the data as we did above, we literally replicate the same numbers. Now let's use *geom_jitter()*:
 
-```{r}
+```{r, class.source='klippy'}
 ggplot(mydata, aes(x = Date, y = Titer, colour = Bat)) + 
     geom_point(size = 2)+geom_jitter()
 ```
 
 The points are now visible because *geom_jitter()* adds some **noise** (random variation) to the points. The *amount of jitter* can be controlled by using the **height** and **width** arguments. For example, using smaller values \<1 makes the points *tighter* by adding smaller random values, like this:
 
-```{r}
+```{r, class.source='klippy'}
 ggplot(mydata, aes(x = Date, y = Titer, colour = Bat)) + 
     geom_point(size = 2)+geom_jitter(width = 0.1, height = 0.5)
 ```
 But let's simulate some more data to make the plots more interesting:
 
-```{r}
+```{r, class.source='klippy'}
 Bat <- c(rep("N1",20),
          rep("N2",20),
          rep("N3",20))
@@ -197,7 +197,7 @@ mydata <- tibble(Bat, Date, Titer)
 
 Now let's plot these data:
 
-```{r}
+```{r, class.source='klippy'}
 ggplot(mydata, aes(x = Bat, y = Titer, colour = Bat)) + 
     geom_point(size = 2)
 ```
@@ -211,7 +211,7 @@ ggplot(mydata, aes(x = Bat, y = Titer, colour = Bat)) +
 
 And now let's plot these data to show the means with standard error for each bat using the **stat_summary()** function:
 
-```{r}
+```{r, class.source='klippy'}
 ## stats_summary method
 ggplot(mydata,              # name of dataset
        aes(x = Bat,        # x-axis variable
@@ -224,7 +224,7 @@ stat_summary(fun.data = "mean_se", geom = "errorbar") # add error bars (standard
 
 The error bars are a bit wide, but we can make plots look better and show more information. Let's plot these the means with standard error for each bat with the data plotted over them:
 
-```{r}
+```{r, class.source='klippy'}
 ## stats_summary method
 ggplot(mydata,              # name of dataset
        aes(x = Bat,        # x-axis variable
@@ -238,7 +238,7 @@ stat_summary(fun.data = "mean_se", geom = "errorbar", width = 0.5, linewidth = 1
 
 But now it's hard to see the mean points so we can change the colour of these points by changing the **colour** aesthetic for the mean and making the point larger by using the **size** aesthetic:
 
-```{r}
+```{r, class.source='klippy'}
 ## stats_summary method
 ggplot(mydata,              # name of dataset
        aes(x = Bat,        # x-axis variable
@@ -252,7 +252,7 @@ stat_summary(fun.data = "mean_se", geom = "errorbar", width = 0.5, linewidth = 1
 
 It's still hard to see the mean points and so we can change the colour of the bats too by changing the **colour** aesthetic for the standard error calculation to black:
 
-```{r}
+```{r, class.source='klippy'}
 ## stats_summary method
 ggplot(mydata,              # name of dataset
        aes(x = Bat,        # x-axis variable
@@ -266,7 +266,7 @@ stat_summary(fun.data = "mean_se", geom = "errorbar", width = 0.5, linewidth = 1
 
 But let's now switch the colouring all to black by removing the **color =** aesthetic (**aes()**) function from above:
 
-```{r}
+```{r, class.source='klippy'}
 ## stats_summary method
 ggplot(mydata,              # name of dataset
        aes(x = Bat,        # x-axis variable
@@ -281,7 +281,7 @@ This looks cleaner. We will come back to these types of data later when we look 
 
 Now let's plot the means with standard errors through time:
 
-```{r}
+```{r, class.source='klippy'}
 ## stats_summary method
 ggplot(mydata,
        aes(x = Date,
@@ -293,7 +293,7 @@ ggplot(mydata,
 
 You can imagine that this could be a plot of the changing antibody titres through time for a population. In reality, if these are from different samples they should probably not have lines linking the points at the different dates, plus this makes the plot look busy. Let's remove those.
 
-```{r}
+```{r, class.source='klippy'}
 ## stats_summary method
 ggplot(mydata,
        aes(x = Date,
