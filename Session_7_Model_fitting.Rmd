@@ -65,7 +65,7 @@ The first worked example here comes from some class notes Prof Tom Hobbs of Colo
 
 Here's the code:  
 
-```{r}
+```{r, class.source='klippy'}
 #estimating parameters in observation model  
 # get bbmle library  
   
@@ -132,7 +132,7 @@ First, the likelihood estimation can be considered to be four parts:
 
 Here is the model:
 
-```{r}
+```{r, class.source='klippy'}
 #function for model  
 yhat = function(a,b){  
  	mu = a + b*x  
@@ -143,7 +143,7 @@ yhat = function(a,b){
 
 Here we define the parameters and independent variable for the model and simulate the data:
 
-```{r}
+```{r, class.source='klippy'}
 # parameters
 a = -2.25  
 b = .60  
@@ -160,7 +160,7 @@ The function **yhat()** represents the deterministic part of the model and **rpo
 ##### The negative log-likelihood  
 The next step is to use the model function and the data to create function that returns the  summed negative log-likelihood.  This is the part of the code that does that:  
 
-```{r}
+```{r, class.source='klippy'}
 #The function for the negative log likelihood  
 LL1 = function (a,b,y=data){  
  	mu = yhat(a=a,b=b)  
@@ -174,7 +174,7 @@ LL1 = function (a,b,y=data){
 
 Next, we use the **mle2()** function to obtain the maximum likelihood estimates.
   
-```{r}
+```{r, class.source='klippy'}
 ##The call to bbmle  
 #m1 = mle2(minuslogl = LL1, start = list(a = -2, b = .8),  
 #control = list(maxit = 5000))  
@@ -190,7 +190,7 @@ Here we will fit an **SIR** model to data.
 
 First, we define the epidemic model.
 
-```{r}
+```{r, class.source='klippy'}
 require(deSolve)
 sir <- function(t,x,parms){
     S <- x[1]
@@ -213,7 +213,7 @@ For **ode()** to work we need to provide an initial *vector* of the *state varia
 
 In this example the data are *deaths* in *Mumbai* in India from a disease outbreak.
 
-```{r}
+```{r, class.source='klippy'}
 N <- 1e4
 parms <- c(N=N,beta=0.0001, nu = 1/7)
 times <- seq(0,30,0.1)
@@ -247,7 +247,7 @@ Note that this can take a long time. If you make *trace=2* within the *control* 
 
 Now let's run the code:
 
-```{r}
+```{r, class.source='klippy'}
 require(bbmle)
 # likelihood function
 sirLL <- function(lbeta, lnu, logN, logI0) {
@@ -274,7 +274,7 @@ theta <- as.numeric(c(plogis(coef(fit)[1:2]),
 
 Next let's plot this:
 
-```{r}
+```{r, class.source='klippy'}
 parms <- c(beta=theta[1], nu = theta[2])
 times <- seq(0,30,0.1)
 x0 <- c(theta[3],theta[4],0)
@@ -287,7 +287,7 @@ points(weeks, cummumbai, pch=16, col="red")
 
 However, the outcomes (deaths) can be modelled as a **Poisson** random variable. Let's see if that does any better by using this code:
 
-```{r}
+```{r, class.source='klippy'}
 sirLL2 <- function(lbeta, lnu, logN, logI0) {
     parms <- c(beta=plogis(lbeta), nu=plogis(lnu))
     x0 <- c(S=exp(logN), I=exp(logI0), R=0)
@@ -314,7 +314,7 @@ The estimate for $β$ is similar to that from the normal likelihood model above,
 
 Let's plot this and see which looks like it fits the data better:
  
-```{r}
+```{r, class.source='klippy'}
 parms <- c(beta=theta2[1], nu = theta2[2])
 times <- seq(0,30,0.1)
 x0 <- c(theta2[3],theta2[4],0)
@@ -358,7 +358,7 @@ Here we will introduce Bayesian analyses through using another piece of software
 
 First we load the libraries and code the model.
 
-```{r}
+```{r, class.source='klippy'}
 require(coda)
 library(rjags)
 set.seed(432104)
@@ -387,7 +387,7 @@ Note that this simple model has three main parts in the **bayes_model** script: 
 
 We then create and run the model it. We will run it for 4 chains (runs) and allow our model to be run in the adaptive phase.  We won't cover that here.
 
-```{r}
+```{r, class.source='klippy'}
 jags <- jags.model(bayes_model.spec,
                    data = list('x' = x,
                                'N' = n),
@@ -399,7 +399,7 @@ update(jags, 1000)
 
 Next we can randomly sample from the results to generate the posterior samples and plot the results from the model. Here we will look at the $\mu$ parameter:
 
-```{r}
+```{r, class.source='klippy'}
 jags1<-jags.samples(jags,
              c('mu', 'tau'),
              1000)
@@ -413,13 +413,13 @@ The *hairy caterpillar* looking plot and *normal* distribution is a good indicat
 
 Let's look at the results we have in other ways using different functions. We can save the results as a new data set:
 
-```{r}
+```{r, class.source='klippy'}
 samps<-coda.samples(jags, variable.names=c("mu", "tau"), n.iter=1000)
 ```
 
 Now we can summarize those in different ways including by using the **summary()** function and different plot functions, such as **densplot()** and **traceplot()**:
 
-```{r}
+```{r, class.source='klippy'}
 #Numerical summary of each parameter:
 summary(samps)
 densplot(samps)
@@ -439,7 +439,7 @@ mcmc_areas(
 
 The plots are not so useful because of the scales, so let's plot them differently:
 
-```{r}
+```{r, class.source='klippy'}
 color_scheme_set("green")
 mcmc_hist(samps, pars = c("mu", "tau"))
 
@@ -449,13 +449,13 @@ Now you can see that these histograms show the same results for the parameter es
 
 To view separate histograms of each of the four Markov chains we can use the **mcmc_hist_by_chain()** function, which plots each chain in a separate facet in the plot.
 
-```{r}
+```{r, class.source='klippy'}
 mcmc_hist_by_chain(samps, pars = c("mu", "tau"))
 
 ```
 And now we can plot these in other ways that all show us that the different chains have converged and are giving similar results.
 
-```{r}
+```{r, class.source='klippy'}
 mcmc_violin(samps, pars = c("mu", "tau"), probs = c(0.1, 0.5, 0.9))
 color_scheme_set("gray")
 
@@ -463,20 +463,20 @@ color_scheme_set("gray")
 
 We can plot all the values to see is there are clusters by chain:
 
-```{r}
+```{r, class.source='klippy'}
 mcmc_scatter(samps, pars = c("mu", "tau"), 
              size = 1.5, alpha = 0.5)
 ```
 
 Or overlay the chains on top like earlier:
 
-```{r}
+```{r, class.source='klippy'}
 mcmc_trace(samps, pars = c("mu", "tau"))
 ```
 
 Or plot the credible intervals:
 
-```{r}
+```{r, class.source='klippy'}
 mcmc_pairs(samps, pars = c("mu", "tau"),
            off_diag_args = list(size = 1.5))
 ```
