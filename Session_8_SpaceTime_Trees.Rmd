@@ -32,14 +32,14 @@ Let's start using some basic but essential analyses.
 
 This example loads the **spatstat** package which is commonly used.
 
-```{r}
+```{r, class.source='klippy'}
 # Load the spatstat package
 library(spatstat)
 ```
 
 There is an inbuilt data set that we will load that is dataset of 50 point locations in the UK. We will load and plot that:
 
-```{r}
+```{r, class.source='klippy'}
 # Load the `chorley` dataset included in the package
 data(chorley)
 
@@ -55,7 +55,7 @@ We then plot the K-function and test for significant clustering using the **enve
 
 Note that in this example we will only use **nsim=5** for 5 simulations but this should be *99* or more, but that takes a lot more time.
 
-```{r}
+```{r, class.source='klippy'}
 # Compute the K-function to test for clustering
 kfun <- Kest(chorley)
 
@@ -71,7 +71,7 @@ plot(env.kfun, main = "Significance Envelope")
 
 The K-function tests for clustering at a certain distance, but we can repeat this process using the **L-function**. The L-function is similar to the K-function but measures the *expected distance to the nearest neighbor for each point*. The L-function can be used to test for clustering at *different distances*. We use the **Lest()** function for this.
 
-```{r}
+```{r, class.source='klippy'}
 # Calculate the L-function to test for clustering at different distances
 lfun <- Lest(chorley)
 
@@ -90,7 +90,7 @@ By analyzing the data using the K- and L-functions we are testing whether the po
 
 Last for this section, we can plot the point data with different *standard deviations* of an *isotropic smoothing kernel* by altering a parameter *sigma* to show the smoothed spatial intensity from a point pattern. Here's what this looks like for these data:
 
-```{r}
+```{r, class.source='klippy'}
 par(mfrow = c(1, 3))  # set up to plot 3 plots on one row
 # plot density at various levels of sigma
 plot(density(chorley, sigma = 0.5), main = "Sigma 0.5")
@@ -117,7 +117,7 @@ Statistical analysis of time series data encompasses a wide range of techniques 
 
 This example first loads the *AirPassengers* dataset that comes with R which contains monthly passenger numbers on an airline from 1949 to 1960. We load the data and then convert the dataset into a time series object using the **ts()** function and plot the time series.
 
-```{r}
+```{r, class.source='klippy'}
 # Load the AirPassengers dataset
 data(AirPassengers)
 
@@ -130,7 +130,7 @@ plot(ts_air, main = "Monthly Airline Passenger Numbers 1949-1960")
 
 Next, we can used the **decompose()** function to break this data set down (i.e. *decomposes*) into **trend**, **seasonal**, and **random** components and plot these. 
 
-```{r}
+```{r, class.source='klippy'}
 # Decompose the time series into trend, seasonal, and random components
 decomp_ts_air <- decompose(ts_air)
 
@@ -140,7 +140,7 @@ plot(decomp_ts_air)
 
 We can also conduct a seasonal decomposition of the time series using the **stl()** function and plot the resulting decomposition.
 
-```{r}
+```{r, class.source='klippy'}
 # Conduct a seasonal decomposition of the time series
 stl_ts_air <- stl(ts_air, s.window = "periodic")
 
@@ -150,7 +150,7 @@ plot(stl_ts_air)
 
 Last for this data set, we can fits an AutoRegressive Integrated Moving Average (ARIMA) model to the time series using the **arima()** function with **order (2, 1, 2)** and generate a forecast for the next 24 months using the **forecast()** function.
 
-```{r}
+```{r, class.source='klippy'}
 # Fit an ARIMA model to the time series
 arima_ts_air <- arima(ts_air, order = c(2, 1, 2))
 
@@ -164,7 +164,7 @@ forecast_ts_air <- forecast(arima_ts_air, h = 24)
 
 Let's plot the forecast:
 
-```{r}
+```{r, class.source='klippy'}
 # Plot the forecast
 plot(forecast_ts_air, main = "Forecasts from ARIMA")
 
@@ -180,7 +180,7 @@ The time series data and some of this code came directly from their time series 
 
 We can install the entire package by following this code using the **pacman** library:
 
-```{r}
+```{r, class.source='klippy'}
 # install the latest version of the Epi R Handbook package
 library(pacman)
 pacman::p_install_gh("appliedepi/epirhandbook")
@@ -188,14 +188,14 @@ pacman::p_install_gh("appliedepi/epirhandbook")
 
 Then we can load the package for use:
 
-```{r}
+```{r, class.source='klippy'}
 # load the package for use
 pacman::p_load(epirhandbook)
 ```
 
 This is the way that this group loads their packages using the **p_load** function in the **pacman** package.
 
-```{r}
+```{r, class.source='klippy'}
 pacman::p_load(rio,          # File import
                here,         # File locator
                tidyverse,    # data management + ggplot2 graphics
@@ -216,13 +216,13 @@ pacman::p_load(rio,          # File import
 
 Now let's import the data. Note that this data is available from the *epirhandbook* website, but it is already included in the data files for this workshop. These data are counts of campylobacteriosis cases from Germany.
 
-```{r}
+```{r, class.source='klippy'}
 counts <- rio::import("data/campylobacter_germany.xlsx")
 ```
 
 Next we reformat the date column and organise the dates into weeks:
 
-```{r}
+```{r, class.source='klippy'}
 ## ensure the date column is in the appropriate format
 counts$date <- as.Date(counts$date)
 
@@ -234,7 +234,7 @@ counts <- counts %>%
 
 Then we can plot the data:
 
-```{r}
+```{r, class.source='klippy'}
 ## plot a line graph of cases by week
 ggplot(counts, aes(x = epiweek, y = case)) + 
      geom_line()
@@ -242,7 +242,7 @@ ggplot(counts, aes(x = epiweek, y = case)) +
 
 Next we can **interpolate** missing data into data sets using this code to do linear interpolation between data:
 
-```{r}
+```{r, class.source='klippy'}
 ## create a variable with missing data instead of weeks with reporting issues
 counts <- counts %>% 
      mutate(case_miss = if_else(
@@ -263,7 +263,7 @@ counts <- counts %>%
 
 Let's plot those:
 
-```{r}
+```{r, class.source='klippy'}
 ## to check what values have been imputed compared to the original
 ggplot_na_imputations(counts$case_miss, counts$case_int) + 
   ## make a traditional plot (with black axes and white background)
@@ -272,7 +272,7 @@ ggplot_na_imputations(counts$case_miss, counts$case_int) +
 
 Next we can use a moving average to do a similar job:
 
-```{r}
+```{r, class.source='klippy'}
 ## create a moving average variable (deals with missing data)
 counts <- counts %>% 
      ## create the ma_4w variable 
@@ -286,7 +286,7 @@ counts <- counts %>%
 
 Here is what the difference between those approaches looks like when we plot the moving average on top of the cases:
 
-```{r}
+```{r, class.source='klippy'}
 ## make a quick visualisation of the difference 
 ggplot(counts, aes(x = epiweek)) + 
      geom_line(aes(y = case)) + 
@@ -294,7 +294,7 @@ ggplot(counts, aes(x = epiweek)) +
 ```
 Next, let's do a **decomposition** on those cases using another function, **STL()** similar to the **decompose()** function above and plot it directly using the **autoplot()** function:
 
-```{r}
+```{r, class.source='klippy'}
 counts %>% 
   as_tsibble(., index = date) %>%
   model(STL(case_int, robust = TRUE)) %>%
@@ -309,7 +309,7 @@ We talk about these correlations using the term **lags**, which in time-series d
 
 Let's look at **autocorrelation** using the **ACF()** function:
 
-```{r}
+```{r, class.source='klippy'}
 ## using the counts dataset
 counts %>% as_tsibble(., index = date) %>%
   ## calculate autocorrelation using a full years worth of lags
@@ -320,7 +320,7 @@ counts %>% as_tsibble(., index = date) %>%
 
 We can see that the data are strongly autocorrelated. But what about the **partial autocorrelation** analysis. Let's do that using the **PACF()** function: 
 
-```{r}
+```{r, class.source='klippy'}
 ## using the counts data set 
 counts %>% as_tsibble(., index = date) %>% 
   ## calculate the partial autocorrelation using a full years worth of lags
@@ -332,7 +332,7 @@ The **PACF** results look very different. This is because partial autocorrelatio
 
 We can see that these data are **not independent**, and we can test for that using the Ljung–Box test statistic (sometimes called the *'portmanteau'* test) for examining the null hypothesis of independence in a given time series.
 
-```{r}
+```{r, class.source='klippy'}
 ## test for independence 
 Box.test(counts$case_int, type = "Ljung-Box")
 ```
@@ -361,7 +361,7 @@ Here we will import a **newick** file that has a tree in that has already been d
 
 We will be using examples from https://yulab-smu.top/treedata-book/ 
 
-```{r}
+```{r, class.source='klippy'}
 library(tidyverse)
 library(devtools)
 # devtools::install_github("YuLab-SMU/treeio")
@@ -378,33 +378,33 @@ tree
 
 Next we plot the tree:
 
-```{r}
+```{r, class.source='klippy'}
 ggplot(tree) + geom_tree() + theme_tree()
 ```
 
 Or with a scale:
 
-```{r}
+```{r, class.source='klippy'}
 ggtree(tree) + geom_treescale()
 ```
 
 Or we plot it like this:
 
-```{r}
+```{r, class.source='klippy'}
 # or add the entire scale to the x axis with theme_tree2()
 ggtree(tree) + theme_tree2()
 ```
 
 We can disable the scaling and produce a **cladogram** instead using **branch.length="none"** inside the **ggtree()** function call.
 
-```{r}
+```{r, class.source='klippy'}
 ggtree(tree, branch.length="none")
 ```
 Note that cladograms have no information shown about time. The **branch lengths** are not meaningful here.
 
 Next we can plot the tree and highlight clades of interest:
 
-```{r}
+```{r, class.source='klippy'}
 ggtree(tree) + 
   geom_tiplab() + 
   geom_cladelabel(node=17, label="clade A", 
@@ -418,7 +418,7 @@ ggtree(tree) +
 
 Or highlight clades by choosing a node:
 
-```{r}
+```{r, class.source='klippy'}
 ggtree(tree) +
   geom_tiplab() + 
   geom_hilight(node=17, fill="gold") + 
@@ -427,7 +427,7 @@ ggtree(tree) +
 
 Or we can link taxa:
 
-```{r}
+```{r, class.source='klippy'}
 ggtree(tree) + 
   geom_tiplab() + 
   geom_taxalink("E", "H", color="blue3") +
@@ -439,21 +439,21 @@ Next we can import and plot some infection related data. Here we will use the da
 
 This data set has been analysed in BEAST and so has time related data.
 
-```{r}
+```{r, class.source='klippy'}
 # Import the data.
 tree <- read.beast("data/flu_tree_beast.tree")
 ```
 
 Next we plot it by providing the most recent sampling date so we get the dates and can add a scale bar like this:
 
-```{r}
+```{r, class.source='klippy'}
 ggtree(tree, mrsd="2013-01-01") + 
   theme_tree2() 
 ```
 
 And finally we can add tip labels and adjust the axis
 
-```{r}
+```{r, class.source='klippy'}
 ggtree(tree, mrsd="2013-01-01") + 
   theme_tree2() + 
   geom_tiplab(size=2, align = F)
