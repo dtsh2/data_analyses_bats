@@ -9,13 +9,17 @@ The course material provides an introduction to R and Rstudio (an integrated dev
 
 ## Prerequisite software installation
 <br>
-To follow this course, you have to install R, Rstudio, JAGS and a LaTex package beforehand.
+To follow this course, you have to install R, Rstudio, and JAGS beforehand.
 <br>
 To install JAGS go to here: https://sourceforge.net/projects/mcmc-jags/files/
 <br>
 To install R and RStudio you can go to here: https://posit.co/download/rstudio-desktop/
 <br>
 To install RTools you can go to here: https://cran.r-project.org/bin/windows/Rtools/
+
+## To run from github
+<br>
+To run this code from this github repository you need to install a LaTex package
 <br>
 To install the LaTex package, open R and run the following code: tinytex::install_tinytex()
 <br>
