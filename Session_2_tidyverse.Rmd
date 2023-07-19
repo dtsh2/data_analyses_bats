@@ -104,7 +104,7 @@ mydata <- tibble(Bat, Date, Titer)
 
 We simulated the data using the **rpois()** function, which simulates data using a **Poisson distribution**, which is a **discrete probability distribution** that expresses the probability of a given number of events, which for this we are saying is an antibody titre. However, titres can be **continuous** data, but we will use integers for now.
 
-Note that without using the **set.seed()** function, we will all have different plots because **rpois()** and the related functions usings a random number generator. You can take a look by typing **?Distributions** in the console.
+Note that without using the **set.seed()** function, we will all have different plots because **rpois()** and the related functions usings a random number generator like **rbeta** or **rnorm** use **random number** generators. You can take a look by typing **?Distributions** in the console.
 
 Let’s plot the titres by the individual bats, first by *Bat* as the x-axis:
 
