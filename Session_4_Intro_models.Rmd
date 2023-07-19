@@ -250,7 +250,7 @@ Lastly, $R_0$ is a special case of $R_eff$, the effective reproduction number, w
 
 ### Running dynamics models
 
-We have seen for to run some *statistical models* above. Now let's look at how to run some mathematical models. 
+We have seen how to run some *statistical models* above. Now let's look at how to run some mathematical models, sometimes referred to as *process* models. 
 
 We will start with the simple SIR model. Here's an example code in R to simulate an SIR model using the differential equations provided above:
 
