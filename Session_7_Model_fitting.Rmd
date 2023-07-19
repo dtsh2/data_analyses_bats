@@ -20,7 +20,7 @@ klippy::klippy('')
 
 Models of all sorts can and are fit to data, including the statistical and mathematical models we have been introduced to here, but also **phylogenetic** methods used to analyse gene or genomic sequence data.
 
-Some mechanistic mathematical models are run without fitting the models to data, as we have seen, but often an informative way to understand a system is to fit models to the data, potentially in an iterative way, where models are developed, data collected based on the model parameters, the model fit to the data, which generates news questions, etc. in an iterative fashion until the system is well understood.
+Some mechanistic mathematical models are run without fitting the models to data, as we have seen, but often an informative way to understand a system is to fit models to the data, potentially in an iterative way, where models are developed, data collected based on the model parameters, the model fit to the data, which generates new questions, etc. in an iterative fashion until the system is well understood.
 
 Earlier we were introduced to linear regression in **Session 4** and more again in **Session 6**. However, what was perhaps not clear is that every time we ran a model it was actually being **fit** to data. We started to explore that at the end of **Session 6**.
 
@@ -34,7 +34,7 @@ $$
 y = \beta_0 + \beta_1 x + \epsilon
 $$
 
-The methods used, but mostly not thought about is a type of **Generalized Least Squares Estimation** (or **GLS**) method called **Ordinary Least Squares** (or **OLS**). OLS makes two crucial assumptions:
+The method used to fit these models, but mostly not thought about becuase it is inbuilt and we use it so often, is a type of **Generalized Least Squares Estimation** (or **GLS**) method called **Ordinary Least Squares** (or **OLS**). OLS makes two crucial assumptions:
 
 1) The variance of the errors of the regression model is constant i.e., the errors are **homoskedastic**, and
 2) The errors are **not correlated** with each other or with themselves.
@@ -45,7 +45,7 @@ Least squares fitting was also used for the **logistic regression** we used to a
 
 However, there are other approaches to fitting models to data. These are typically presented as **Maximum likelihood** and **Bayesian** methods. Many phylogenetic tools use these methods, such as in this list here:  https://en.wikipedia.org/wiki/List_of_phylogenetics_software.
 
-However, interestingly (or not!) really maximum likelihood is a special case of a Bayesian model and GLS a special case of maximum likelihood, like OLS is a special case of GLS. So, they are all related *but* they all make **different assumptions**.
+However, interestingly (or not!) maximum likelihood is really a special case of a Bayesian model and GLS a special case of maximum likelihood, like OLS is a special case of GLS. So, they are all related *but* they all make **different assumptions**.
 
 For example, for the linear model fitting, if the errors belong to a normal distribution the least squares estimators are also the maximum likelihood estimators. The **nls()** function (which stands for 'Nonlinear Least Squares') can be used to find parameter values for relatively simple *non-linear* functions.
 
@@ -385,7 +385,7 @@ Note that this simple model has three main parts in the **bayes_model** script: 
 * "tau <- pow(sigma, -2)" calculates the precision "tau" as the reciprocal of the squared value of "sigma". This relationship ensures that "tau" and "sigma" are inversely related.
 * "sigma ~ dunif(0, 100)" specifies a prior distribution for the parameter "sigma". It assigns a uniform distribution between 0 and 100 to "sigma". This prior suggests that "sigma" can take any value within this range with equal probability.
 
-We then create and run the model it. We will run it for 4 chains (runs) and allow our model to be run in the adaptive phase.  We won't cover that here.
+We then create and run the model. We will run it for 4 chains (runs) and allow our model to be run in the adaptive phase.  We won't cover that here.
 
 ```{r, class.source='klippy'}
 jags <- jags.model(bayes_model.spec,
