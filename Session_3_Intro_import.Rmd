@@ -193,7 +193,7 @@ Now we have the data ready for analyses. We will start with some plotting.
 
 ### Session 3b - ggplot exercises using real data
 
-Personally, I think plotting data is extremely helpful. It tells us so much and helps make sure that the data are as we expect, plus it tells us what we might see in the analyses, even before we have performed them. Having plotted your data can also help you identify if you have errors in your analyses, because you might get a result that is unexpected. This might be a real result or an error.
+Personally, I think plotting data is extremely helpful. It tells us so much and helps make sure that the data are as we expect, plus it tells us what we might see in the analyses, even before we have performed them. Plotting your data can also help you identify if you have errors in your analyses, because you might get a result that is unexpected. This might be a real result or an error.
 
 *Note that in this section, like others, we are not necessarily always going to use the most useful plot for the data, because this is a workshop and we are using these as training material and exercises.*
 
@@ -225,7 +225,7 @@ ggplot(example_data, aes(x = Age, y = IgG_S)) +
   geom_point()
 ```
 
-And what do the titres look like by age and gender (here classified as *Sex*):
+And what do the titres look like by gender (here classified as *Sex*):
 
 ```{r, class.source='klippy'}
 library(ggplot2)
