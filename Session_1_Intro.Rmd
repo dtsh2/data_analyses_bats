@@ -141,7 +141,7 @@ mean(n1)
 mean(n2)
 ```
 
-The vector we made called *n2* includes an **NA**, which means *Not Available*, and so the function **mean()** cannot calculate the mean when a number in does not exist. We can easily resolve that here because mean() has a **logical** condition that we will learn more about later, but here it is **na.rm = FALSE**. We include that and get a different answer:
+The vector we made called *n2* includes an **NA**, which means *Not Available*, and so the function **mean()** cannot calculate the mean when a number does not exist (i.e. is an **NA**). We can easily resolve that here because **mean()** has a **logical** condition that we will learn more about later. Here it is **na.rm = FALSE** by default. We can change this default logical condition to **na.rm = TRUE** to get a different answer:
 
 ```{r, class.source='klippy'}
 n2 <- c(1,2,3,4,NA)
@@ -224,13 +224,13 @@ ggplot(data.frame(x = data), aes(x)) +
   labs(x = "Data", y = "Count", title = "Histogram of Simulated Data")
 ```
 
-Do not worry about the **ggplot()** text for now, we will have a session on this, because *ggplot()* uses a slightly different **syntax**.
+Do not worry about the **ggplot()** text or *assignment operator* **<-** for now, we will cover this below and have a session on ggplot, because *ggplot()* uses a slightly different **syntax**.
 
 ### Getting help in R
 
 **Google** is your friend! I use Google *a lot* for coding. However, there are some great resources, some of which are included in the *README* file on the Github page for this, but not least R comes with its own help page https://www.r-project.org/help.html
 
-Basic help can be found in several ways within R though. This includes typing the function name in the **search** box in the **help** tab in **RStudio** or using the R help functions **help()** or simply *?*. For example,
+Basic help can be found in several ways within R though. This includes typing the function name in the **search** box in the **help** tab in **RStudio** or using the R help functions **help()** or simply *?*. For example, you can run the below after removing the **#**,
 
 ```{r, class.source='klippy'}
 # help(lm)
@@ -271,6 +271,8 @@ And *type* the package name or in RStudio click on:
 Packages > Install 
 
 And *type* the package name.
+
+Lastly, packages can be loaded in RStudio using a tab on the right panel. See if you can find this.
 
 Once a package is loaded, its functions and data sets can be accessed using the package name followed by the function or data set name, separated by a period. For example:
 
