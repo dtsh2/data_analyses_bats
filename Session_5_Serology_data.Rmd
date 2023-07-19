@@ -18,9 +18,9 @@ klippy::klippy('')
 
 ### Session 5a - antibody titres as data
 
-The first thing to remember is that the antibodies were measure are populations of immunoglobulins. That means that they have properties similar to other things that we count and measure. 
+The first thing to remember is that the antibodies that were measured are populations of immunoglobulins. That means that they have properties similar to other things that we count and measure. 
 
-The second thing to remember is that antibody populations are dynamics and changing through time.
+The second thing to remember is that antibody populations are dynamic and changing through time.
 
 Let's now import our recently created and saved data set, **example_data.csv** and begin:
 
@@ -205,7 +205,7 @@ plot(ecdf(data1), main = "", xlim=c(10,55))
 plot(ecdf(data2), add = TRUE, lty = "dashed")
 ```
 
-Now let's imagine that these antibody titres are from the same population but the *IgA_S* with the lower titres are **naive** animals that have never has an infection (so susceptible in the modelling), and the *IgG_S* are the **immune** or if not immune **recovered** animals (recovered) that are truly **seropositive**, but we want to find the difference. 
+Now let's imagine that these antibody titres are from the same population but the *IgA_S* class with the lower titres are from **naive** animals that have never has an infection (so susceptible in the modelling), and that the *IgG_S* are the **immune** or if not immune **recovered** animals (recovered) that are truly **seropositive**, but we want to find the difference. 
 
 You can see that some of the *"negative"* animals have titres that are equal or higher than the *"positive"* animals. This is not uncommon. Many things determine this, such as previous infections with related infections or waning antibody titres. These lead to **false positive** and **false negative** results.
 
@@ -213,7 +213,7 @@ You can see that some of the *"negative"* animals have titres that are equal or 
 
 **Sensitivity** and **specificity** are two measures used to evaluate the performance of any test that has this *binary* classification model, which we often want. 
 
-**Sensitivity** is the proportion of **true positive cases** that are correctly identified by the model. It measures how well the model can identify the individuals who actually have the condition, out of all individuals who have the condition. A model with high sensitivity correctly identifies most of the true positive cases and has a low false negative rate.
+**Sensitivity** is the proportion of **true positive cases** that are correctly identified by the model. It measures how well the model can identify the individuals who actually have the condition, out of all individuals who do have the condition. A model with high sensitivity correctly identifies most of the true positive cases and has a low false negative rate.
 
 **Specificity** is the proportion of true negative cases that are correctly identified
 
@@ -307,7 +307,7 @@ We can simply read the values, but to simplify this, let's get the best **thresh
 coords(rocobj,'best')
 ```
 
-Now let's use the *example_data* serology data **assuming** that the *Result.Beckman* is the truth and the *IgG_S* is the quantitative serology data we have:
+Now let's use the *example_data* serology data **assuming** that the *Result.Beckman* is *the truth* and the *IgG_S* is the quantitative serology data we have:
 
 ```{r, class.source='klippy'}
 rocobj2 <- plot.roc(example_data$Result.Beckman, 
@@ -511,7 +511,6 @@ xx2<-data.frame(x=x2,pop=as.factor(pop))
 library(ggplot2)
 p2 <- ggplot(xx2, aes(x = x, fill = pop)) + geom_histogram()+
   geom_vline(xintercept = best_cutoff, col = 'black')
-
 ```
 
 ```{r}
