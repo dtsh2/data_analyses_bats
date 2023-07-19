@@ -198,7 +198,7 @@ summary(model4)
 #ggPredict(model4, interactive = T, se=T)
 
 ```
-Note the significant coavariates above. An easy was to see them is with the **$ * $** or **$ ** $**. But note effect sizes are also important. 
+Note the significant coavariates above. An easy way to see them is with the **$ * $** or **$ ** $**. But note effect sizes are also important. 
 
 Now let's look at some interactions by replacing the **+** in the above equations with **$*$**:
 
