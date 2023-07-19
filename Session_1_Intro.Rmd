@@ -300,7 +300,7 @@ print(data)
 
 ```
 
-In this script, **rnorm()** is used to simulate a normal distribution with a mean of 10 and a standard deviation of 2, generating 5 random values. The **set.seed()** function is used to ensure reproducibility of the results. The **print()** function is one we already learned above and used to display the generated data in the console.
+In this script, **rnorm()** is used to simulate a normal distribution with a mean of 10 and a standard deviation of 2, generating 5 random values. The **set.seed()** function is used to ensure reproducibility of the results. The **print()** function is one we already learned above and used to display the generated data in the console. Note that the object **data** now contains a new dataset to when we used it above.
 
 You can modify the parameters of **rnorm()** to generate different types of data sets with different distributions and parameters.
 
@@ -468,7 +468,7 @@ df <- data.frame(var1, var2)
 print(df)
 ```
 
-In this script, a **factor** variable *var1* is defined with 9 values representing 3 different **levels**: "A", "B", and "C". A **numeric** variable *var2* is also defined with 6 values.
+In this script, a **factor** variable *var1* is defined with 9 values representing 3 different **levels**: "A", "B", and "C". A **numeric** variable *var2* is also defined with 9 values.
 
 The two variables are then combined into a **data frame** called *df* using the **data.frame()** function. We will discuss data frames below. Note we can plot this data set using:
 
@@ -486,7 +486,7 @@ R has built-in data types for storing and manipulating **dates** and **times**. 
 # Create a date sequence for the month of May 2023
 dates <- seq(as.Date("2023-05-01"), as.Date("2023-05-31"), by = "day")
 
-# Create a time sequence for the day, in 15-minute intervals
+# Create a time sequence for the day, in 45-minute intervals
 times <- seq(from = as.POSIXct("2023-05-01 00:00:00"), to = as.POSIXct("2023-05-01 23:45:00"), by = "45 min")
 
 # Print the first 10 dates
