@@ -198,6 +198,7 @@ summary(model4)
 #ggPredict(model4, interactive = T, se=T)
 
 ```
+
 Note the significant coavariates above. An easy way to see them is with the **$ * $** or **$ ** $**. But note effect sizes are also important. 
 
 Now let's look at some interactions by replacing the **+** in the above equations with **$*$**:
@@ -242,6 +243,7 @@ predicted.classes <- ifelse(probabilities > 0.5, "pos", "neg")
 # Model accuracy
 mean(predicted.classes==df$response)
 ```
+
 If you change ``trace = FALSE'' to ``trace = TRUE'' you will see the steps.
 
 ##### Plotting regression models
@@ -256,4 +258,5 @@ library(GGally)
 ggcoef(model)
 
 ```
+
 Here we can see the point estimates, their 95\% confidence intervals and if these are greater than or less than 0.
