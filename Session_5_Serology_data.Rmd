@@ -54,6 +54,7 @@ This is continuous numeric data, so let's do some basic statistics on these:
 ```{r, class.source='klippy'}
 summary(example_data$IgG_S)
 ```
+
 This tells us that the *minimum* (Min.) is 1.099, *first quartile* (1st Qu.) 11.595, *median* (Median) 27.031, *mean* (Mean) 34.551, *third quartile* (3rd Qu.) 47.903 and *maximum* (Max.) 156.733.
 
 We can summarize that using another function, **boxplot.stats()**:
@@ -61,6 +62,7 @@ We can summarize that using another function, **boxplot.stats()**:
 ```{r, class.source='klippy'}
 boxplot.stats(example_data$IgG_S, do.conf = FALSE)
 ```
+
 Which also tells us the sample size (n=51) and that there are some **outliers** ($out). These may or may not be important. 
 
 Now lets plot that in several ways. In the *base* plot it looks like this:
@@ -145,6 +147,7 @@ Now let's plot them in ggplot:
 library(ggplot2)
 ggplot(long_data, aes(x=Titre, fill=Antibody)) + geom_histogram(alpha=0.6, position="identity")
 ```
+
 They look different; let's plot these as box plots and overlay the data:
 
 ```{r, class.source='klippy'}
@@ -432,7 +435,7 @@ p
 
 You can see that some red and some blue points are either side of the cut off in black, showing the false positives and negatives if this was the chosen cut off.
 
-Now let's re-run the code with different cut offs:
+Now let's re-run the code with different cut offs and make news plots called p1 and p2 that we will save and plot after running the code:
 
 ```{r}
 # Simulate data from a bimodal distribution
@@ -474,6 +477,8 @@ p1 <- ggplot(xx1, aes(x = x, fill = pop)) + geom_histogram()+
   geom_vline(xintercept = best_cutoff, col = 'black')
 ```
 
+And p2
+
 ```{r}
 # Simulate data from a bimodal distribution
 set.seed(123)
@@ -512,6 +517,8 @@ library(ggplot2)
 p2 <- ggplot(xx2, aes(x = x, fill = pop)) + geom_histogram()+
   geom_vline(xintercept = best_cutoff, col = 'black')
 ```
+
+And let's plot them together:
 
 ```{r}
 library(ggpubr)
