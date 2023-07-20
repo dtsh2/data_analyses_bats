@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(klippy)
 klippy::klippy('')
 ```
+
 ## Session 1
 
 **Session 1** contains an introduction to **R** and **RStudio**, **data types** and **basic data manipulation** in R, with a brief introduction to **plotting** in base R.
@@ -553,6 +554,7 @@ my_list$age <- NULL
 # check the removal of 'age'
 names(my_list)
 ```
+
 Lists can be very useful but they are also not the most intuitive objects to work with. Let's take one look at the structure of the list using the **str()** function and use two ways to find the `Bat 1' character:
 
 ```{r, class.source='klippy'}
@@ -564,6 +566,7 @@ my_list$name[1]
 # method two
 my_list[[1]][1]
 ```
+
 We will discuss these approaches to indexing more in the next section on arrays and matrices.
 
 #### Arrays and matrices
