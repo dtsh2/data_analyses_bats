@@ -166,6 +166,7 @@ Note that you get a **warning**, but this is fine. This is warning us that there
 ```{r, class.source='klippy'}
 print(example_data$Total.Ab.Roche)
 ```
+
 Let's look at the format of what is left:
 
 ```{r, class.source='klippy'}
@@ -525,6 +526,7 @@ long_data %>%
   scale_y_continuous(limit=c(0,NA),oob=squish)+
   xlab("Time from symptoms to sample")
 ```
+
 There are other ways of plotting these data through time, but this helps us understand what **geom_smooth()** goes. But see if the data in the above plot makes biological sense to you.
 
 ### Exporting data
