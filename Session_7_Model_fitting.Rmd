@@ -149,8 +149,6 @@ a = -2.25
 b = .60  
 # independent variable available to all functions.  
 x = sort(runif(50,1,20))  
-
-
 y = yhat(a=a,b=b)  
 data=rpois(length(y),y)  
 ```
@@ -442,7 +440,6 @@ The plots are not so useful because of the scales, so let's plot them differentl
 ```{r, class.source='klippy'}
 color_scheme_set("green")
 mcmc_hist(samps, pars = c("mu", "tau"))
-
 ```
 
 Now you can see that these histograms show the same results for the parameter estimates from the summaries of the data using the **summary()** function above.
@@ -451,14 +448,12 @@ To view separate histograms of each of the four Markov chains we can use the **m
 
 ```{r, class.source='klippy'}
 mcmc_hist_by_chain(samps, pars = c("mu", "tau"))
-
 ```
 And now we can plot these in other ways that all show us that the different chains have converged and are giving similar results.
 
 ```{r, class.source='klippy'}
 mcmc_violin(samps, pars = c("mu", "tau"), probs = c(0.1, 0.5, 0.9))
 color_scheme_set("gray")
-
 ```
 
 We can plot all the values to see is there are clusters by chain:
