@@ -37,7 +37,7 @@ This example loads the **spatstat** package which is commonly used.
 library(spatstat)
 ```
 
-There is an inbuilt data set that we will load that is dataset of 50 point locations in the UK. We will load and plot that:
+There is an inbuilt data set that we will load that is a dataset of 50 point locations in the UK. We will load and plot that:
 
 ```{r, class.source='klippy'}
 # Load the `chorley` dataset included in the package
@@ -49,7 +49,7 @@ plot(chorley)
 
 These data are larynx and lung cancer cases plotted at the locations of their homes.
 
-Next, let's computes the **K-function** using the **Kest()** function, a common tool for testing for **clustering** in **spatial point data**. The K-function measures the *expected number of points within a certain distance of each point*, and compares this to the *expected number of points if the points were randomly distributed*. 
+Next, let's compute the **K-function** using the **Kest()** function, a common tool for testing for **clustering** in **spatial point data**. The K-function measures the *expected number of points within a certain distance of each point*, and compares this to the *expected number of points if the points were randomly distributed*. 
 
 We then plot the K-function and test for significant clustering using the **envelope()** function, which creates an envelope around the K-function based on simulations under the null hypothesis of complete spatial randomness. The significance envelope can be used to test whether the observed K-function values are significantly different from the expected values under this randomness.
 
@@ -441,6 +441,7 @@ This data set has been analysed in BEAST and so has time related data.
 
 ```{r, class.source='klippy'}
 # Import the data.
+require(ggtree)
 tree <- read.beast("data/flu_tree_beast.tree")
 ```
 
