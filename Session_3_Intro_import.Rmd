@@ -62,6 +62,7 @@ But in this script, we first set the path to the data folder using the *data_pat
 Note that you can also directly import the data using RStudio, as in this image:
 
 ![data import](figures/data_import.png)
+
 Next we are going to work with the data we just imported. 
 
 The data we imported came from a paper, *SARS-CoV-2 integral membrane proteins shape the serological responses of COVID-19 patients* by Martin et al. The data are in the folder that comes with this workshop git repository, but you can find the paper here: https://doi.org/10.1016/j.isci.2021.103185 and the data here:
