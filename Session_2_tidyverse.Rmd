@@ -6,6 +6,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
 ```{r klippy, echo=FALSE, include=TRUE}
 library(klippy)
 klippy::klippy('')
@@ -154,8 +155,8 @@ Now let's increase the simulated data set size. This can be done simply, such as
 library(dplyr)
 mydata <- bind_rows(replicate(3, mydata, simplify = FALSE))
 dim(mydata)
-
 ```
+
 Let's plot that to see two things; what **replicate()** does and what a function **geom_jitter()** does. First the plain ggplot from before:
 
 ```{r, class.source='klippy'}
@@ -176,6 +177,7 @@ The points are now visible because *geom_jitter()* adds some **noise** (random v
 ggplot(mydata, aes(x = Date, y = Titer, colour = Bat)) + 
     geom_point(size = 2)+geom_jitter(width = 0.1, height = 0.5)
 ```
+
 But let's simulate some more data to make the plots more interesting:
 
 ```{r, class.source='klippy'}
@@ -201,6 +203,7 @@ Now let's plot these data:
 ggplot(mydata, aes(x = Bat, y = Titer, colour = Bat)) + 
     geom_point(size = 2)
 ```
+
 And let's plot these again using *geom_jitter()*:
 
 ```{r}
