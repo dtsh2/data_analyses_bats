@@ -223,7 +223,7 @@ counts <- rio::import("data/campylobacter_germany.xlsx")
 Note that the above takes some time, so as I already put the data in the data file we can use this shortcut:
 
 ```{r, class.source='klippy'}
-install.packages("readxl", dependencies = T)
+#install.packages("readxl", dependencies = T)
 library(readxl)
 library(tidyverse)
 library(dplyr)
