@@ -228,6 +228,7 @@ library(readxl)
 library(tidyverse)
 library(dplyr)
 library(tsibble)
+library(imputeTS)
 # read_excel reads both xls and xlsx files
 counts <- as.data.frame(read_excel("data/campylobacter_germany.xlsx"))
 ```
