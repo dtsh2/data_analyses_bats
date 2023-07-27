@@ -437,7 +437,7 @@ You can see that some red and some blue points are either side of the cut off in
 
 Now let's re-run the code with different cut offs and make news plots called p1 and p2 that we will save and plot after running the code:
 
-```{r}
+```{r, class.source='klippy'}
 # Simulate data from a bimodal distribution
 set.seed(123)
 n <- 1000
@@ -479,7 +479,7 @@ p1 <- ggplot(xx1, aes(x = x, fill = pop)) + geom_histogram()+
 
 And p2
 
-```{r}
+```{r, class.source='klippy'}
 # Simulate data from a bimodal distribution
 set.seed(123)
 n <- 1000
@@ -520,7 +520,7 @@ p2 <- ggplot(xx2, aes(x = x, fill = pop)) + geom_histogram()+
 
 And let's plot them together:
 
-```{r}
+```{r, class.source='klippy'}
 library(ggpubr)
 ggarrange(p,p1,p2, ncol = 1)
 
@@ -532,7 +532,7 @@ Note of course that there will be *no negative titres* for tests such as on the 
 
 Last we can use these types of data to determine what is and what is not over and above a threshold. For example, with our original example data let's make a new column saying whether the *IgG_S* titre is over 10.3, which we used in an example above.
 
-```{r}
+```{r, class.source='klippy'}
 library(tidyverse)
 
 # add the threshold, e.g.
