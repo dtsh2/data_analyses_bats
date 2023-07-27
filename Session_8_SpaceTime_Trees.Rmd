@@ -178,24 +178,26 @@ Now let's look as some disease data. These were taken from a very useful resourc
 
 The time series data and some of this code came directly from their time series analysis section here: https://epirhandbook.com/en/time-series-and-outbreak-detection.html
 
-We can install the entire package by following this code using the **pacman** library:
+We can install the entire package by following this code using the **pacman** library, but I have commented it out here because it takes ages!
 
 ```{r, class.source='klippy'}
 # install the latest version of the Epi R Handbook package
 library(pacman)
-pacman::p_install_gh("appliedepi/epirhandbook")
+#pacman::p_install_gh("appliedepi/epirhandbook")
 ```
 
 Then we can load the package for use:
 
 ```{r, class.source='klippy'}
 # load the package for use
-pacman::p_load(epirhandbook)
+# pacman::p_load(epirhandbook)
 ```
 
 This is the way that this group loads their packages using the **p_load** function in the **pacman** package.
 
 ```{r, class.source='klippy'}
+library(pacman)
+
 pacman::p_load(rio,          # File import
                here,         # File locator
                tidyverse,    # data management + ggplot2 graphics
@@ -220,17 +222,18 @@ Now let's import the data. Note that this data is available from the *epirhandbo
 counts <- rio::import("data/campylobacter_germany.xlsx")
 ```
 
-Note that the above takes some time, so as I already put the data in the data file we can use this shortcut:
+Note that the above takes some time, so the below code might be a quicker ways to load, but you will need some of the packages above too. It's commented out for now.
 
 ```{r, class.source='klippy'}
 #install.packages("readxl", dependencies = T)
-library(readxl)
-library(tidyverse)
-library(dplyr)
-library(tsibble)
-library(imputeTS)
+#library(readxl)
+#library(tidyverse)
+#library(dplyr)
+#library(tsibble)
+#library(imputeTS)
+#library(slider)
 # read_excel reads both xls and xlsx files
-counts <- as.data.frame(read_excel("data/campylobacter_germany.xlsx"))
+#counts <- as.data.frame(read_excel("data/campylobacter_germany.xlsx"))
 ```
 
 Next we reformat the date column and organise the dates into weeks:
