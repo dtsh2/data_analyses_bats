@@ -7,6 +7,11 @@ This course material is part of the training material for a two-day course provi
 The course material provides an introduction to R and Rstudio (an integrated development environment for R) in an interactive manner and then contains example data-sets to practise data manipulation, graphical exploration and statistical hypothesis testing.
 <br>
 
+
+## The Worksheets folder contains the content
+<br>
+The "Worksheets" folder contains compiled "html" files that have the content ready to use. The code can be copy and pasted. The content includes how to get started.
+
 ## Prerequisite software installation
 <br>
 To follow this course, you have to install R, Rstudio, and JAGS beforehand.
