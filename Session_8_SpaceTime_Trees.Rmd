@@ -207,10 +207,6 @@ pacman::p_load(rio,          # File import
                feasts,       # for time series decomposition and autocorrelation
                forecast,     # fit sin and cosin terms to data (note: must load after feasts)
                trending,     # fit and assess models 
-               tmaptools,    # for getting geocoordinates (lon/lat) based on place names
-               ecmwfr,       # for interacting with copernicus sateliate CDS API
-               stars,        # for reading in .nc (climate data) files
-               units,        # for defining units of measurement (climate data)
                yardstick,    # for looking at model accuracy
                surveillance  # for aberration detection
                )
